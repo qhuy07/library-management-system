@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="app.diagrams.net">
+  <diagram name="Page-1" id="XgOr1P30TcKIg34R-5Pp">
+    <mxGraphModel dx="1030" dy="574" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="jEPitRlovlflvfthEVH7-1" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Member&amp;nbsp;" vertex="1">
+          <mxGeometry height="80" width="140" x="40" y="80" as="geometry" />
+        </mxCell>
+        <mxCell id="jEPitRlovlflvfthEVH7-2" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Administrator" vertex="1">
+          <mxGeometry height="80" width="140" x="40" y="320" as="geometry" />
+        </mxCell>
+        <mxCell id="jEPitRlovlflvfthEVH7-3" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Librarian" vertex="1">
+          <mxGeometry height="80" width="140" x="680" y="200" as="geometry" />
+        </mxCell>
+        <mxCell id="jEPitRlovlflvfthEVH7-4" parent="1" style="rounded=1;whiteSpace=wrap;html=1;roundedPerimeter=1;" value="0.0&lt;div&gt;&lt;br&gt;Library Management System&lt;/div&gt;" vertex="1">
+          <mxGeometry height="120" width="220" x="315" y="180" as="geometry" />
+        </mxCell>
+        <mxCell id="jEPitRlovlflvfthEVH7-5" edge="1" parent="1" source="jEPitRlovlflvfthEVH7-1" style="endArrow=classic;html=1;rounded=0;defaultLabelBackgroundColor=page;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0;entryDx=0;entryDy=0;" target="jEPitRlovlflvfthEVH7-4" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="400" y="250" as="sourcePoint" />
+            <mxPoint x="450" y="200" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="jEPitRlovlflvfthEVH7-6" edge="1" parent="1" source="jEPitRlovlflvfthEVH7-2" style="endArrow=classic;html=1;rounded=0;defaultLabelBackgroundColor=page;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.893;entryDx=0;entryDy=0;" target="jEPitRlovlflvfthEVH7-4" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="190" y="130" as="sourcePoint" />
+            <mxPoint x="330" y="195" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="jEPitRlovlflvfthEVH7-7" edge="1" parent="1" source="jEPitRlovlflvfthEVH7-3" style="endArrow=classic;html=1;rounded=0;defaultLabelBackgroundColor=page;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" target="jEPitRlovlflvfthEVH7-4" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="590" y="400" as="sourcePoint" />
+            <mxPoint x="730" y="335" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="jEPitRlovlflvfthEVH7-8" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;rotation=30;" value="Search, Borrow" vertex="1">
+          <mxGeometry height="60" width="105" x="205" y="110" as="geometry" />
+        </mxCell>
+        <mxCell id="jEPitRlovlflvfthEVH7-9" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;rotation=25;" value="Catalog Status, Loan Slip, Fine Alert" vertex="1">
+          <mxGeometry height="60" width="140" x="170" y="160" as="geometry" />
+        </mxCell>
+        <mxCell id="jEPitRlovlflvfthEVH7-10" edge="1" parent="1" source="jEPitRlovlflvfthEVH7-4" style="endArrow=classic;html=1;rounded=0;defaultLabelBackgroundColor=page;entryX=1;entryY=0.75;entryDx=0;entryDy=0;exitX=-0.011;exitY=0.185;exitDx=0;exitDy=0;" target="jEPitRlovlflvfthEVH7-1" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="310" y="200" as="sourcePoint" />
+            <mxPoint x="360" y="160" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="jEPitRlovlflvfthEVH7-11" edge="1" parent="1" source="jEPitRlovlflvfthEVH7-4" style="endArrow=classic;html=1;rounded=0;defaultLabelBackgroundColor=page;exitX=1.005;exitY=0.379;exitDx=0;exitDy=0;entryX=-0.01;entryY=0.335;entryDx=0;entryDy=0;entryPerimeter=0;" target="jEPitRlovlflvfthEVH7-3" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="310" y="210" as="sourcePoint" />
+            <mxPoint x="360" y="160" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="jEPitRlovlflvfthEVH7-12" edge="1" parent="1" source="jEPitRlovlflvfthEVH7-4" style="endArrow=classic;html=1;rounded=0;defaultLabelBackgroundColor=page;entryX=1;entryY=0.75;entryDx=0;entryDy=0;exitX=0.058;exitY=1;exitDx=0;exitDy=0;" target="jEPitRlovlflvfthEVH7-2" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="330" y="310" as="sourcePoint" />
+            <mxPoint x="360" y="160" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="jEPitRlovlflvfthEVH7-13" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;rotation=0;" value="Catalog CRUD, Issue/Return Scan" vertex="1">
+          <mxGeometry height="60" width="140" x="535" y="180" as="geometry" />
+        </mxCell>
+        <mxCell id="jEPitRlovlflvfthEVH7-14" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;rotation=0;" value="Eligibility, Overdue List, Receipts" vertex="1">
+          <mxGeometry height="60" width="175" x="517.5" y="230" as="geometry" />
+        </mxCell>
+        <mxCell id="jEPitRlovlflvfthEVH7-15" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;rotation=-30;" value="Policy Config, Staff Accounts" vertex="1">
+          <mxGeometry height="60" width="150" x="165" y="280" as="geometry" />
+        </mxCell>
+        <mxCell id="jEPitRlovlflvfthEVH7-17" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;rotation=-30;" value="Audit Logs, Analytics Reports" vertex="1">
+          <mxGeometry height="60" width="150" x="190" y="330" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

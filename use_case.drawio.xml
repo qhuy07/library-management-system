@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="app.diagrams.net">
+  <diagram name="Trang-1" id="dnmFhEMloJgBHlDLyFV4">
+    <mxGraphModel dx="1288" dy="718" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="KImC90YsxmyLX0IA9uo6-1" parent="1" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;labelPerimeter=1;" value="Member" vertex="1">
+          <mxGeometry height="60" width="30" x="40" y="110" as="geometry" />
+        </mxCell>
+        <mxCell id="KImC90YsxmyLX0IA9uo6-2" parent="1" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;labelPerimeter=1;" value="Administrator" vertex="1">
+          <mxGeometry height="60" width="30" x="40" y="450" as="geometry" />
+        </mxCell>
+        <mxCell id="KImC90YsxmyLX0IA9uo6-3" parent="1" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;labelPerimeter=1;" value="Librarian" vertex="1">
+          <mxGeometry height="60" width="30" x="40" y="280" as="geometry" />
+        </mxCell>
+        <mxCell id="KImC90YsxmyLX0IA9uo6-8" parent="1" style="whiteSpace=wrap;html=1;aspect=fixed;" value="" vertex="1">
+          <mxGeometry height="676" width="676" x="134" y="10" as="geometry" />
+        </mxCell>
+        <mxCell id="KImC90YsxmyLX0IA9uo6-9" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;fontSize=17;" value="Library Management System(LMS)" vertex="1">
+          <mxGeometry height="30" width="310" x="320" y="20" as="geometry" />
+        </mxCell>
+        <mxCell id="KImC90YsxmyLX0IA9uo6-10" parent="1" style="ellipse;whiteSpace=wrap;html=1;shapeInside=1;" value="Hold Unavailable Book" vertex="1">
+          <mxGeometry height="50" width="210" x="170" y="60" as="geometry" />
+        </mxCell>
+        <mxCell id="KImC90YsxmyLX0IA9uo6-11" parent="1" style="ellipse;whiteSpace=wrap;html=1;shapeInside=1;" value="View Active Loans &amp;amp; Renew Book" vertex="1">
+          <mxGeometry height="40" width="230" x="160" y="120" as="geometry" />
+        </mxCell>
+        <mxCell id="KImC90YsxmyLX0IA9uo6-12" parent="1" style="ellipse;whiteSpace=wrap;html=1;shapeInside=1;" value="Log in &amp;amp; Manage Profile" vertex="1">
+          <mxGeometry height="50" width="120" x="145" y="180" as="geometry" />
+        </mxCell>
+        <mxCell id="KImC90YsxmyLX0IA9uo6-13" edge="1" parent="1" style="endArrow=none;html=1;rounded=0;defaultLabelBackgroundColor=page;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="KImC90YsxmyLX0IA9uo6-10" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="80" y="130" as="sourcePoint" />
+            <mxPoint x="134" y="100" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KImC90YsxmyLX0IA9uo6-14" edge="1" parent="1" style="endArrow=none;html=1;rounded=0;defaultLabelBackgroundColor=page;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="KImC90YsxmyLX0IA9uo6-11" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="80" y="140" as="sourcePoint" />
+            <mxPoint x="140" y="110" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KImC90YsxmyLX0IA9uo6-15" edge="1" parent="1" style="endArrow=none;html=1;rounded=0;defaultLabelBackgroundColor=page;" target="KImC90YsxmyLX0IA9uo6-12" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="80" y="160" as="sourcePoint" />
+            <mxPoint x="130" y="170" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KImC90YsxmyLX0IA9uo6-16" edge="1" parent="1" style="endArrow=none;html=1;rounded=0;defaultLabelBackgroundColor=page;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="KImC90YsxmyLX0IA9uo6-12" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="80" y="280" as="sourcePoint" />
+            <mxPoint x="127" y="270" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KImC90YsxmyLX0IA9uo6-17" edge="1" parent="1" source="KImC90YsxmyLX0IA9uo6-2" style="endArrow=none;html=1;rounded=0;defaultLabelBackgroundColor=page;entryX=0;entryY=1;entryDx=0;entryDy=0;exitX=0.75;exitY=0.1;exitDx=0;exitDy=0;exitPerimeter=0;" target="KImC90YsxmyLX0IA9uo6-12" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="80" y="450" as="sourcePoint" />
+            <mxPoint x="130" y="400" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KImC90YsxmyLX0IA9uo6-18" parent="1" style="ellipse;whiteSpace=wrap;html=1;shapeInside=1;" value="Borrow Book" vertex="1">
+          <mxGeometry height="50" width="166" x="180" y="280" as="geometry" />
+        </mxCell>
+        <mxCell id="KImC90YsxmyLX0IA9uo6-19" parent="1" style="ellipse;whiteSpace=wrap;html=1;shapeInside=1;" value="Manage book &amp;amp; Physical copies" vertex="1">
+          <mxGeometry height="50" width="200" x="160" y="340" as="geometry" />
+        </mxCell>
+        <mxCell id="KImC90YsxmyLX0IA9uo6-20" edge="1" parent="1" style="endArrow=none;html=1;rounded=0;defaultLabelBackgroundColor=page;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="KImC90YsxmyLX0IA9uo6-18" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="80" y="310" as="sourcePoint" />
+            <mxPoint x="120" y="260" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KImC90YsxmyLX0IA9uo6-21" edge="1" parent="1" style="endArrow=none;html=1;rounded=0;defaultLabelBackgroundColor=page;entryX=0;entryY=0;entryDx=0;entryDy=0;" target="KImC90YsxmyLX0IA9uo6-19" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="80" y="317.32" as="sourcePoint" />
+            <mxPoint x="175" y="299.99999999999994" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KImC90YsxmyLX0IA9uo6-22" parent="1" style="ellipse;whiteSpace=wrap;html=1;shapeInside=1;" value="Register &amp;amp; Manage Member Accounts&amp;nbsp;" vertex="1">
+          <mxGeometry height="50" width="190" x="165" y="400" as="geometry" />
+        </mxCell>
+        <mxCell id="KImC90YsxmyLX0IA9uo6-23" parent="1" style="ellipse;whiteSpace=wrap;html=1;shapeInside=1;" value="Calculate &amp;amp; Collect Overdue Fine" vertex="1">
+          <mxGeometry height="50" width="220" x="167" y="470" as="geometry" />
+        </mxCell>
+        <mxCell id="KImC90YsxmyLX0IA9uo6-24" edge="1" parent="1" style="endArrow=none;html=1;rounded=0;defaultLabelBackgroundColor=page;entryX=0;entryY=0;entryDx=0;entryDy=0;" target="KImC90YsxmyLX0IA9uo6-22" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="80" y="330" as="sourcePoint" />
+            <mxPoint x="120" y="330" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KImC90YsxmyLX0IA9uo6-25" edge="1" parent="1" style="endArrow=none;html=1;rounded=0;defaultLabelBackgroundColor=page;entryX=0;entryY=0;entryDx=0;entryDy=0;" target="KImC90YsxmyLX0IA9uo6-23" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="80" y="350" as="sourcePoint" />
+            <mxPoint x="192.21825406947983" y="397.3223304703363" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KImC90YsxmyLX0IA9uo6-26" parent="1" style="ellipse;whiteSpace=wrap;html=1;shapeInside=1;" value="Manage Staff, Policies &amp;amp; Audit Report" vertex="1">
+          <mxGeometry height="50" width="210" x="145" y="540" as="geometry" />
+        </mxCell>
+        <mxCell id="KImC90YsxmyLX0IA9uo6-27" edge="1" parent="1" source="KImC90YsxmyLX0IA9uo6-2" style="endArrow=none;html=1;rounded=0;defaultLabelBackgroundColor=page;entryX=0;entryY=0;entryDx=0;entryDy=0;" target="KImC90YsxmyLX0IA9uo6-26" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="84" y="500" as="sourcePoint" />
+            <mxPoint x="134" y="450" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KImC90YsxmyLX0IA9uo6-28" parent="1" style="ellipse;whiteSpace=wrap;html=1;shapeInside=1;" value="Search &amp;amp; Browse Catalog" vertex="1">
+          <mxGeometry height="60" width="166" x="414" y="160" as="geometry" />
+        </mxCell>
+        <mxCell id="KImC90YsxmyLX0IA9uo6-30" edge="1" parent="1" source="KImC90YsxmyLX0IA9uo6-10" style="endArrow=open;endSize=12;dashed=1;html=1;rounded=0;defaultLabelBackgroundColor=page;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0;entryDx=0;entryDy=0;" target="KImC90YsxmyLX0IA9uo6-28" value="&amp;lt;&amp;lt;extend&amp;gt;&amp;gt;">
+          <mxGeometry relative="1" width="160" as="geometry">
+            <mxPoint x="420" y="115" as="sourcePoint" />
+            <mxPoint x="580" y="115" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KImC90YsxmyLX0IA9uo6-31" edge="1" parent="1" style="endArrow=none;html=1;rounded=0;defaultLabelBackgroundColor=page;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="KImC90YsxmyLX0IA9uo6-28" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="80" y="150" as="sourcePoint" />
+            <mxPoint x="510" y="280" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KImC90YsxmyLX0IA9uo6-33" edge="1" parent="1" style="endArrow=none;html=1;rounded=0;defaultLabelBackgroundColor=page;entryX=0.054;entryY=0.749;entryDx=0;entryDy=0;entryPerimeter=0;" target="KImC90YsxmyLX0IA9uo6-28" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="80" y="300" as="sourcePoint" />
+            <mxPoint x="510" y="280" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KImC90YsxmyLX0IA9uo6-34" parent="1" style="ellipse;whiteSpace=wrap;html=1;shapeInside=1;" value="Return Book&amp;nbsp;" vertex="1">
+          <mxGeometry height="60" width="166" x="387" y="245" as="geometry" />
+        </mxCell>
+        <mxCell id="KImC90YsxmyLX0IA9uo6-35" edge="1" parent="1" style="endArrow=none;html=1;rounded=0;defaultLabelBackgroundColor=page;entryX=0;entryY=0;entryDx=0;entryDy=0;" target="KImC90YsxmyLX0IA9uo6-34" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="80" y="290" as="sourcePoint" />
+            <mxPoint x="510" y="280" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KImC90YsxmyLX0IA9uo6-36" parent="1" style="ellipse;whiteSpace=wrap;html=1;shapeInside=1;" value="Update Physical Copy Status" vertex="1">
+          <mxGeometry height="70" width="160" x="650" y="290" as="geometry" />
+        </mxCell>
+        <mxCell id="KImC90YsxmyLX0IA9uo6-37" edge="1" parent="1" source="KImC90YsxmyLX0IA9uo6-34" style="endArrow=open;endSize=12;dashed=1;html=1;rounded=0;defaultLabelBackgroundColor=page;entryX=0.049;entryY=0.305;entryDx=0;entryDy=0;entryPerimeter=0;" target="KImC90YsxmyLX0IA9uo6-36" value="&amp;lt;&amp;lt;include&amp;gt;&amp;gt;">
+          <mxGeometry relative="1" width="160" as="geometry">
+            <mxPoint x="560" y="350" as="sourcePoint" />
+            <mxPoint x="720" y="350" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KImC90YsxmyLX0IA9uo6-39" edge="1" parent="1" source="KImC90YsxmyLX0IA9uo6-18" style="endArrow=open;endSize=12;dashed=1;html=1;rounded=0;defaultLabelBackgroundColor=page;exitX=0.962;exitY=0.685;exitDx=0;exitDy=0;exitPerimeter=0;" target="KImC90YsxmyLX0IA9uo6-36" value="&amp;lt;&amp;lt;include&amp;gt;&amp;gt;">
+          <mxGeometry relative="1" width="160" as="geometry">
+            <mxPoint x="392" y="340" as="sourcePoint" />
+            <mxPoint x="552" y="340" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KImC90YsxmyLX0IA9uo6-40" parent="1" style="ellipse;whiteSpace=wrap;html=1;shapeInside=1;" value="Validate Member Eligibility &amp;amp; Quota" vertex="1">
+          <mxGeometry height="50" width="166" x="430" y="370" as="geometry" />
+        </mxCell>
+        <mxCell id="KImC90YsxmyLX0IA9uo6-41" edge="1" parent="1" source="KImC90YsxmyLX0IA9uo6-18" style="endArrow=open;endSize=12;dashed=1;html=1;rounded=0;defaultLabelBackgroundColor=page;exitX=1;exitY=1;exitDx=0;exitDy=0;entryX=0;entryY=0;entryDx=0;entryDy=0;" target="KImC90YsxmyLX0IA9uo6-40" value="&amp;lt;&amp;lt;include&amp;gt;&amp;gt;">
+          <mxGeometry relative="1" width="160" as="geometry">
+            <mxPoint x="365" y="347.5" as="sourcePoint" />
+            <mxPoint x="525" y="347.5" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KImC90YsxmyLX0IA9uo6-42" edge="1" parent="1" source="KImC90YsxmyLX0IA9uo6-23" style="endArrow=open;endSize=12;dashed=1;html=1;rounded=0;defaultLabelBackgroundColor=page;exitX=1;exitY=0;exitDx=0;exitDy=0;entryX=0;entryY=1;entryDx=0;entryDy=0;" target="KImC90YsxmyLX0IA9uo6-34" value="&amp;lt;&amp;lt;extend&amp;gt;&amp;gt;">
+          <mxGeometry relative="1" width="160" as="geometry">
+            <mxPoint x="380" y="260" as="sourcePoint" />
+            <mxPoint x="540" y="260" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

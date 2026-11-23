@@ -162,3 +162,77 @@ public:
         outMessage = "Loi: Khong tim thay tai khoan " + userId;
         return false;
     }
+
+    string searchBook(const string& kw) {
+        string res = "DANH MUC DAU SACH & BAN SAO VAT LY (Book & BookCopy):\r\n"
+                     "========================================================================\r\n";
+        for (const auto& b : db.books) {
+            if (kw.empty() || b.title.find(kw) != string::npos || b.bookId == kw || b.author.find(kw) != string::npos) {
+                res += "[" + b.bookId + "] " + b.title + " - Tac gia: " + b.author + " (ISBN: " + b.isbn + ")\r\n";
+                for (const auto& c : db.bookCopies) {
+                    if (c.bookId == b.bookId) {
+                        res += "    -> Ban sao: " + c.copyId + " | Barcode: " + c.barcode + " | Ke: " + c.rackLocation + " | Trang thai: " + c.copyStatus + "\r\n";
+                    }
+                }
+            }
+        }
+        return res;
+    }
+
+    string addBookAndCopy(const string& bookId, const string& title, const string& author, const string& copyId, const string& barcode) {
+        if (bookId.empty() || title.empty() || copyId.empty()) return "Loi: Nhap BookID, Ten sach va CopyID!";
+        bool bookExists = false;
+        for (const auto& b : db.books) if (b.bookId == bookId) bookExists = true;
+        if (!bookExists) {
+            db.books.push_back({bookId, "978-NEW", title, author, "NXB Tre", 2026, "CAT01"});
+        }
+        db.bookCopies.push_back({copyId, barcode.empty() ? "NF-NEW" : barcode, "A2-01", "Available", bookId});
+        db.saveAll();
+        return "[UC: Add Book] Da them sach '" + title + "' va ban sao '" + copyId + "'.";
+    }
+
+    string updateBook(const string& bookId, const string& newTitle, const string& newAuthor) {
+        for (auto& b : db.books) {
+            if (b.bookId == bookId) {
+                if (!newTitle.empty()) b.title = newTitle;
+                if (!newAuthor.empty()) b.author = newAuthor;
+                db.saveAll();
+                return "[UC: Update Book] Da cap nhat thong tin cho BookID: " + bookId;
+            }
+        }
+        return "[UC: Update Book] Khong tim thay BookID: " + bookId;
+    }
+
+    string deleteBook(const string& bookId) {
+        for (size_t i = 0; i < db.books.size(); i++) {
+            if (db.books[i].bookId == bookId) {
+                db.books.erase(db.books.begin() + i);
+                db.saveAll();
+                return "[UC: Delete Book] Da xoa dau sach BookID: " + bookId;
+            }
+        }
+        return "[UC: Delete Book] Khong tim thay BookID: " + bookId;
+    }
+
+    string deleteCopy(const string& copyId) {
+        if (copyId.empty()) return "[UC: Delete Copy] Loi: Vui long nhap CopyID can xoa!";
+        bool foundAny = false;
+        string busyStatus = "";
+        for (size_t i = 0; i < db.bookCopies.size(); i++) {
+            if (db.bookCopies[i].copyId == copyId) {
+                foundAny = true;
+                if (!db.bookCopies[i].isAvailable()) {
+                    busyStatus = db.bookCopies[i].copyStatus;
+                    continue;
+                }
+                string bId = db.bookCopies[i].bookId;
+                db.bookCopies.erase(db.bookCopies.begin() + i);
+                db.saveAll();
+                return "[UC: Delete Copy] Da xoa ban sao CopyID: " + copyId + " (thuoc sach " + bId + ").";
+            }
+        }
+        if (foundAny) {
+            return "[UC: Delete Copy] Khong the xoa ban sao " + copyId + " vi dang o trang thai " + busyStatus + "!";
+        }
+        return "[UC: Delete Copy] Khong tim thay ban sao CopyID: " + copyId;
+    }

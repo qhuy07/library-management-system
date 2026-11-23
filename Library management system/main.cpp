@@ -445,3 +445,36 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
             string msg = g_ctrl.deleteBook(GetStr(hCatBookId));
             SetWindowTextA(hCatOutput, (msg + "\r\n\r\n" + g_ctrl.searchBook("")).c_str());
         }
+        else if (id == ID_BTN_HOLD) {
+            string msg = g_ctrl.reserveBook(GetStr(hCirMemberId), GetStr(hCirBookId));
+            SetWindowTextA(hCirOutput, msg.c_str());
+        }
+        else if (id == ID_BTN_RETURN) {
+            string msg = g_ctrl.processReturn(GetStr(hCirLoanId), GetStr(hCirDay));
+            SetWindowTextA(hCirOutput, (msg + "\r\n\r\n" + g_ctrl.searchBook("")).c_str());
+        }
+        else if (id == ID_BTN_RENEW) {
+            SetWindowTextA(hCirOutput, g_ctrl.renewLoan(GetStr(hCirLoanId)).c_str());
+        }
+        else if (id == ID_BTN_PAY_FINE) {
+            SetWindowTextA(hCirOutput, g_ctrl.collectFine(GetStr(hCirFineId)).c_str());
+        }
+        else if (id == ID_BTN_ADD_ACC) {
+            string newId = g_ctrl.generateNextUserId();
+            string msg = g_ctrl.createStaffOrMember(GetStr(hMemRole), newId, GetStr(hMemName), GetStr(hMemEmail));
+            SetWindowTextA(hMemOutput, (msg + "\r\n\r\n" + GetMembersListText()).c_str());
+        }
+        else if (id == ID_BTN_POLICY) {
+            int days = GetStr(hRepMaxDays).empty() ? 14 : stoi(GetStr(hRepMaxDays));
+            double rate = GetStr(hRepFineRate).empty() ? 5000.0 : stod(GetStr(hRepFineRate));
+            string msg = g_ctrl.updateSystemPolicy(days, rate);
+            SetWindowTextA(hRepOutput, (msg + "\r\n\r\n" + g_ctrl.exportAuditReport()).c_str());
+        }
+        break;
+    }
+    case WM_DESTROY:
+        PostQuitMessage(0);
+        return 0;
+    }
+    return DefWindowProcA(hwnd, uMsg, wParam, lParam);
+}

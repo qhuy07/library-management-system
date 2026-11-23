@@ -313,3 +313,15 @@ public:
             {"C03", "NF-0075-01", "A1-03", "Available", "B03"},
             {"C04", "NF-0088-01", "A1-04", "Borrowed",  "B04"}
         };
+        loans = {
+            {"L01", "U04", "U02", "C02", DateUtils::addDays(todayStr, -4),  DateUtils::addDays(todayStr, 10),  "NONE", 0, "Active"},
+            {"L02", "U05", "U02", "C04", DateUtils::addDays(todayStr, -28), DateUtils::addDays(todayStr, -14), "NONE", 0, "Overdue"}
+        };
+        reservations = {
+            {"R01", DateUtils::addDays(todayStr, -1), DateUtils::addDays(todayStr, 2), "Pending", "U03", "B02", "NONE"}
+        };
+        fines = {
+            {"F01", 14, 70000.0, "Unpaid", "NONE", "L02"}
+        };
+        saveAll();
+    }

@@ -243,7 +243,7 @@ int main() {
         res.set_content(os.str(), "application/json; charset=utf-8");
     });
 
-    // 1b. Dang ky tai khoan Doc gia (Member) moi ngay tai trang Dang nhap
+    // Dang ky tai khoan Doc gia (Member) moi ngay tai trang Dang nhap
     svr.Post("/api/register", [](const httplib::Request& req, httplib::Response& res) {
         lock_guard<mutex> lock(g_mtx);
         string name = req.get_param_value("name");

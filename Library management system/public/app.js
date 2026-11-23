@@ -310,3 +310,84 @@ window.handleHoldAction = async function (action, reservationId) {
   showToast(data.message || 'Da cap nhat trang thai dat cho.', !data.ok);
   await loadState();
 };
+
+function startApp(user) {
+  currentUser = user;
+  sessionStorage.setItem('nf_user', JSON.stringify(user));
+
+  $('auth-screen').classList.add('hidden');
+  $('app-shell').classList.remove('hidden');
+  $('user-name').textContent = `${user.fullName} (${user.userId})`;
+  $('user-role').textContent = user.role;
+
+  applyRoleVisibility();
+  switchTab('overview');
+  loadState();
+
+  clearInterval(pollTimer);
+  pollTimer = setInterval(() => {
+    const tag = document.activeElement?.tagName;
+    if (currentUser && tag !== 'INPUT' && tag !== 'SELECT' && tag !== 'TEXTAREA') {
+      loadState(true);
+    }
+  }, 5000);
+}
+
+function logout() {
+  currentUser = null;
+  appState = null;
+  sessionStorage.removeItem('nf_user');
+  clearInterval(pollTimer);
+  $('app-shell').classList.add('hidden');
+  $('auth-screen').classList.remove('hidden');
+  $('login-status').textContent = 'Log out of the system.';
+}
+
+// EVENT LISTENERS
+$('login-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const data = await apiPost('/api/login', {
+    email: $('login-email').value.trim(),
+    password: $('login-pass').value
+  });
+  if (data.ok && data.user) {
+    $('login-status').textContent = '';
+    startApp(data.user);
+  } else {
+    $('login-status').textContent = data.message || 'Log in fail!';
+  }
+});
+
+$('btn-go-register').addEventListener('click', () => {
+  $('login-card').classList.add('hidden');
+  $('register-card').classList.remove('hidden');
+  $('reg-status').textContent = '';
+});
+
+$('btn-back-login').addEventListener('click', () => {
+  $('register-card').classList.add('hidden');
+  $('login-card').classList.remove('hidden');
+});
+
+$('register-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const data = await apiPost('/api/register', {
+    name: $('reg-name').value.trim(),
+    email: $('reg-email').value.trim(),
+    password: $('reg-pass').value,
+    confirmPassword: $('reg-confirm').value
+  });
+  if (data.ok) {
+    $('login-email').value = $('reg-email').value.trim();
+    $('login-pass').value = '';
+    $('register-card').classList.add('hidden');
+    $('login-card').classList.remove('hidden');
+    $('login-status').style.color = '#1e4d3b';
+    $('login-status').textContent = data.message + ' Please log in!';
+  } else {
+    $('reg-status').textContent = data.message || 'Register fail!';
+  }
+});
+
+$('btn-logout').addEventListener('click', logout);
+

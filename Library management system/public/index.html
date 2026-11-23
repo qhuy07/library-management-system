@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Diamond Library - Management System</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <!-- AUTH SCREEN (LOGIN / REGISTER) -->
+  <div id="auth-screen" class="auth-wrapper">
+    <div id="login-card" class="auth-card">
+      <div class="auth-banner">DIAMOND LIBRARY</div>
+      <div class="auth-body">
+        <h2>Log in system</h2>
+        <p class="muted">Please log in with your account @ut.edu.vn</p>
+        <form id="login-form">
+          <label>Email</label>
+          <input type="email" id="login-email" value="long@ut.edu.vn" required />
+          <label>Password</label>
+          <input type="password" id="login-pass" value="123" required />
+          <button type="submit" class="btn btn-primary btn-full">Log in to system</button>
+        </form>
+        <button type="button" id="btn-go-register" class="btn btn-mint btn-full" style="margin-top:10px;">
+          No account? Register now.
+        </button>
+        <div id="login-status" class="status-msg"></div>
+        <div class="sample-accounts">
+          <strong>Test account (Pass: 123):</strong><br/>
+          &bull; Admin: <code>admin@ut.edu.vn</code><br/>
+          &bull; Librarian: <code>long@ut.edu.vn</code><br/>
+          &bull; Member: <code>truong@ut.edu.vn</code>, <code>duong@ut.edu.vn</code>, <code>toan@ut.edu.vn</code>
+        </div>
+      </div>
+    </div>
+
+    <div id="register-card" class="auth-card hidden">
+      <div class="auth-banner">CREATE ACCOUNT</div>
+      <div class="auth-body">
+        <h2>Member register</h2>
+        <p class="muted">Register an account to search &amp; Reserve and hold book</p>
+        <form id="register-form">
+          <label>Full name</label>
+          <input type="text" id="reg-name" placeholder="Nguyen Van A" required />
+          <label>Email</label>
+          <input type="email" id="reg-email" placeholder="vana@ut.edu.vn" required />
+          <label>Password (at least 3 characters)</label>
+          <input type="password" id="reg-pass" required />
+          <label>Confirm password</label>
+          <input type="password" id="reg-confirm" required />
+          <button type="submit" class="btn btn-primary btn-full">REGISTER ACCOUNT</button>
+        </form>
+        <button type="button" id="btn-back-login" class="btn btn-mint btn-full" style="margin-top:10px;">
+          Have an account? Go to login page
+        </button>
+        <div id="reg-status" class="status-msg"></div>
+      </div>
+    </div>
+  </div>

@@ -428,3 +428,13 @@ int main() {
         string msg = g_ctrl.renewLoan(loanId);
         res.set_content("{\"ok\":true,\"message\":\"" + jsonEscape(msg) + "\"}", "application/json; charset=utf-8");
     });
+// Thu tien phat: chi Librarian & Administrator
+    svr.Post("/api/circulation/pay-fine", [](const httplib::Request& req, httplib::Response& res) {
+        lock_guard<mutex> lock(g_mtx);
+        User* actor = getActor(req);
+        if (!actor || (actor->getRole() != "Librarian" && actor->getRole() != "Administrator")) {
+            return sendForbidden(res, "Tu choi: Chi Thu thu hoac Admin moi co quyen thu tien phat!");
+        }
+        string msg = g_ctrl.collectFine(req.get_param_value("fineId"));
+        res.set_content("{\"ok\":true,\"message\":\"" + jsonEscape(msg) + "\"}", "application/json; charset=utf-8");
+    });

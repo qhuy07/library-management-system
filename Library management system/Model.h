@@ -351,3 +351,26 @@ public:
             else if (role == "Administrator")
                 admins.push_back(Administrator(id, name, mail, pwd, stoi(extra1), extra2));
         }
+        books.clear();
+        ifstream fb("db_books.csv");
+        while (getline(fb, line)) {
+            if (line.empty()) continue;
+            stringstream ss(line);
+            Book b; string yr;
+            getline(ss, b.bookId, ','); getline(ss, b.isbn, ','); getline(ss, b.title, ',');
+            getline(ss, b.author, ','); getline(ss, b.publisher, ','); getline(ss, yr, ',');
+            getline(ss, b.categoryId, ',');
+            b.pubYear = stoi(yr);
+            books.push_back(b);
+        }
+
+        bookCopies.clear();
+        ifstream fc("db_copies.csv");
+        while (getline(fc, line)) {
+            if (line.empty()) continue;
+            stringstream ss(line);
+            BookCopy c;
+            getline(ss, c.copyId, ','); getline(ss, c.barcode, ','); getline(ss, c.rackLocation, ',');
+            getline(ss, c.copyStatus, ','); getline(ss, c.bookId, ',');
+            bookCopies.push_back(c);
+        }

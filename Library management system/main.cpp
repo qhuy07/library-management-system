@@ -208,3 +208,41 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
         hRegStatus     = MakeLabel(hwnd, "Register new member account.", 345, 492, 400, 45);
 
         g_registerScreen = {rgBox, rgTitle, rgSub, rgL1, hRegName, rgL2, hRegEmail, rgL3, hRegPass, rgL4, hRegConfirm, rgBtn, rgBackBtn, hRegStatus};
+
+        // KHUNG CHUNG SAU KHI DANG NHAP
+        HWND sbBox = MakeGroup(hwnd, " Diamond LMS ", 15, 10, 195, 640);
+        HWND bOv   = MakeColorButton(hwnd, "1. Overview",    ID_TAB_OVERVIEW,    30, 45,  165, 36);
+        HWND bCat  = MakeColorButton(hwnd, "2. Catalogue",   ID_TAB_CATALOGUE,   30, 90,  165, 36);
+        HWND bCir  = MakeColorButton(hwnd, "3. Circulation", ID_TAB_CIRCULATION, 30, 135, 165, 36);
+        HWND bMem  = MakeColorButton(hwnd, "4. Members",     ID_TAB_MEMBERS,     30, 180, 165, 36);
+        HWND bRep  = MakeColorButton(hwnd, "5. Reports",     ID_TAB_REPORTS,     30, 225, 165, 36);
+
+        HWND uBox  = MakeGroup(hwnd, " Tai khoan online ", 25, 505, 175, 78);
+        hUserFooter = MakeLabel(hwnd, "", 35, 528, 155, 45, 16, true);
+        HWND bOut  = MakeColorButton(hwnd, "Dang xuat (Logout)", ID_BTN_LOGOUT, 25, 595, 175, 36);
+
+        hHeaderPath = MakeLabel(hwnd, "Diamond Library > Overview", 225, 18, 720, 22, 16, true);
+        hDateLabel  = MakeLabel(hwnd, DateUtils::today().c_str(), 965, 18, 105, 22);
+
+        g_appShell = {sbBox, bOv, bCat, bCir, bMem, bRep, uBox, hUserFooter, bOut, hHeaderPath, hDateLabel};
+
+        // MAN HINH 1: OVERVIEW
+        HWND ovB1 = MakeGroup(hwnd, " LIBRARY BRIEFING ", 225, 45, 845, 75);
+        HWND ovB2 = MakeLabel(hwnd, "Welcome back to Diamond Library!", 245, 72, 750, 26, 20, true);
+
+        HWND ovK1 = MakeGroup(hwnd, " Loans active ",    225, 130, 202, 70);
+        hStatLoans   = MakeLabel(hwnd, "0", 240, 160, 175, 25, 16, true);
+        HWND ovK2 = MakeGroup(hwnd, " Books available ", 439, 130, 202, 70);
+        hStatAvail   = MakeLabel(hwnd, "0", 454, 160, 175, 25, 16, true);
+        HWND ovK3 = MakeGroup(hwnd, " Overdue loans ",   653, 130, 202, 70);
+        hStatOverdue = MakeLabel(hwnd, "0", 668, 160, 175, 25, 16, true);
+        HWND ovK4 = MakeGroup(hwnd, " Active members ",  867, 130, 203, 70);
+        hStatMembers = MakeLabel(hwnd, "0", 882, 160, 175, 25, 16, true);
+
+        HWND ovRec = MakeGroup(hwnd, " Recent circulation (Lich su muon tra) ", 225, 215, 480, 435);
+        hBoxRecent = MakeBox(hwnd, "", 240, 242, 450, 392);
+
+        HWND ovAtt = MakeGroup(hwnd, " Needs your attention (Cac khoan phat tre han) ", 720, 215, 350, 435);
+        hBoxAttention = MakeBox(hwnd, "", 735, 242, 320, 392);
+
+        g_tabOverview = {ovB1, ovB2, ovK1, hStatLoans, ovK2, hStatAvail, ovK3, hStatOverdue, ovK4, hStatMembers, ovRec, hBoxRecent, ovAtt, hBoxAttention};

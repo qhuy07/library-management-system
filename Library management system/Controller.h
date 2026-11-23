@@ -399,4 +399,135 @@ public:
         }
         return "[UC: Collect Fine] Khong tim thay phieu phat chua thanh toan: " + fineId;
     }
+string reserveBook(const string& memberId, const string& bookId) {
+        syncReservations();
 
+        bool memberExists = false;
+        for (const auto& m : db.members) if (m.getUserId() == memberId) { memberExists = true; break; }
+        if (!memberExists) return "[UC: Hold Book] Loi: Khong tim thay MemberID: " + memberId;
+
+        const Book* targetBook = nullptr;
+        for (const auto& b : db.books) if (b.bookId == bookId) { targetBook = &b; break; }
+        if (!targetBook) return "[UC: Hold Book] Khong tim thay BookID: " + bookId;
+
+        for (const auto& r : db.reservations) {
+            if (r.memberId == memberId && r.bookId == bookId &&
+                (r.status == "Pending" || r.status == "Ready")) {
+                return "[UC: Hold Book] Ban da co phieu dat cho (" + r.reservationId + " - " + r.status + ") cho sach nay!";
+            }
+        }
+
+        string todayStr  = DateUtils::today();
+        string expiryStr = DateUtils::addDays(todayStr, 3);
+        int nextNum = (int)db.reservations.size() + 1;
+        string resId = (nextNum < 10 ? "R0" : "R") + to_string(nextNum);
+
+        db.reservations.push_back({resId, todayStr, expiryStr, "Pending", memberId, bookId, "NONE"});
+        db.saveAll();
+        return "[UC: Hold Book] Dat cho thanh cong! Ma: " + resId + " (Sach: " + targetBook->title +
+               " | Trang thai: Pending - Cho Thu thu xac nhan | Han: " + expiryStr + ")";
+    }
+
+    string approveReservation(const string& reservationId) {
+        syncReservations();
+        string todayStr = DateUtils::today();
+
+        for (auto& r : db.reservations) {
+            if (r.reservationId == reservationId) {
+                if (r.status != "Pending") {
+                    return "[UC: Approve Hold] Khong the duyet phieu " + reservationId + " (Trang thai hien tai: " + r.status + ").";
+                }
+                for (auto& c : db.bookCopies) {
+                    if (c.bookId == r.bookId && c.isAvailable()) {
+                        string newExpiry = DateUtils::addDays(todayStr, 3);
+                        c.markReserved();
+                        r.markReady(c.copyId, newExpiry);
+                        db.saveAll();
+                        return "[UC: Approve Hold] Da duyet phieu " + reservationId + "! Giu ban sao " +
+                               c.copyId + " cho Member " + r.memberId + " den het ngay " + newExpiry + ".";
+                    }
+                }
+                return "[UC: Approve Hold] Hien chua co ban sao Available nao cho sach " + r.bookId +
+                       ". Phieu se tu dong chuyen sang Ready ngay khi co nguoi tra sach.";
+            }
+        }
+        return "[UC: Approve Hold] Khong tim thay ma dat cho: " + reservationId;
+    }
+
+    string fulfillReservation(const string& reservationId, const string& librarianId, const string& issueDateInput = "") {
+        syncReservations();
+
+        for (auto& r : db.reservations) {
+            if (r.reservationId == reservationId) {
+                if (r.status != "Ready" && r.status != "Pending") {
+                    return "[UC: Fulfill Hold] Phieu " + reservationId + " khong con hieu luc (" + r.status + ").";
+                }
+                string targetCopyId = r.copyId;
+                if (targetCopyId == "NONE") {
+                    for (const auto& c : db.bookCopies) {
+                        if (c.bookId == r.bookId && c.isAvailable()) {
+                            targetCopyId = c.copyId;
+                            break;
+                        }
+                    }
+                }
+                if (targetCopyId == "NONE") {
+                    return "[UC: Fulfill Hold] Chua co ban sao nao san sang de giao cho phieu " + reservationId + ".";
+                }
+                return issueLoan(r.memberId, targetCopyId, librarianId, issueDateInput);
+            }
+        }
+        return "[UC: Fulfill Hold] Khong tim thay ma dat cho: " + reservationId;
+    }
+
+    string cancelReservation(const string& reservationId, const string& actorId, const string& actorRole) {
+        syncReservations();
+        string todayStr = DateUtils::today();
+
+        for (auto& r : db.reservations) {
+            if (r.reservationId == reservationId) {
+                if (actorRole == "Member" && r.memberId != actorId) {
+                    return "[UC: Cancel Hold] Tu choi: Ban chi duoc huy phieu dat cho cua chinh minh!";
+                }
+                if (r.status != "Pending" && r.status != "Ready") {
+                    return "[UC: Cancel Hold] Phieu " + reservationId + " da o trang thai " + r.status + ", khong the huy.";
+                }
+
+                string releasedCopy = r.copyId;
+                r.cancelHold();
+
+                string extraMsg = "";
+                if (releasedCopy != "NONE") {
+                    string nextInfo;
+                    if (assignCopyToNextPending(r.bookId, releasedCopy, todayStr, nextInfo)) {
+                        extraMsg = " | Ban sao " + releasedCopy + " da duoc chuyen sang giu cho phieu ke tiep: " + nextInfo;
+                    } else {
+                        for (auto& c : db.bookCopies) {
+                            if (c.copyId == releasedCopy && c.isReserved()) {
+                                c.markReturned();
+                                extraMsg = " | Ban sao " + releasedCopy + " da tro lai trang thai Available.";
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                db.saveAll();
+                return "[UC: Cancel Hold] Da huy phieu dat cho " + reservationId + extraMsg;
+            }
+        }
+        return "[UC: Cancel Hold] Khong tim thay ma dat cho: " + reservationId;
+    }
+
+    string renewLoan(const string& loanId) {
+        for (auto& l : db.loans) {
+            if (l.loanId == loanId) {
+                if (l.renewLoan(7)) {
+                    db.saveAll();
+                    return "[UC: Renew Book] Gia han thanh cong them 7 ngay! Han tra moi: " + l.dueDate;
+                }
+                return "[UC: Renew Book] Khong the gia han (Da qua 2 lan hoac phieu da dong).";
+            }
+        }
+        return "[UC: Renew Book] Khong tim thay LoanID: " + loanId;
+    }

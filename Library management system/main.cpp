@@ -437,6 +437,10 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
             string msg = g_ctrl.updateBook(GetStr(hCatBookId), GetStr(hCatTitle), GetStr(hCatAuthor));
             SetWindowTextA(hCatOutput, (msg + "\r\n\r\n" + g_ctrl.searchBook("")).c_str());
         }
+        else if (id == ID_BTN_BORROW) {
+            string msg = g_ctrl.issueLoan(GetStr(hCirMemberId), GetStr(hCirCopyId), g_user->getUserId(), GetStr(hCirDay));
+            SetWindowTextA(hCirOutput, (msg + "\r\n\r\n" + g_ctrl.searchBook("")).c_str());
+        }
         else if (id == ID_BTN_DEL_BOOK) {
             string msg = g_ctrl.deleteBook(GetStr(hCatBookId));
             SetWindowTextA(hCatOutput, (msg + "\r\n\r\n" + g_ctrl.searchBook("")).c_str());

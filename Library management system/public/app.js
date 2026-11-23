@@ -147,3 +147,89 @@ function renderAll() {
     loansBody.innerHTML = appState.loans
       .map(
         (l) => `
+<tr>
+          <td><strong>${escapeHtml(l.loanId)}</strong></td>
+          <td>${escapeHtml(l.copyId)}</td>
+          <td>${escapeHtml(l.memberId)}</td>
+          <td>${escapeHtml(l.issueDate)}</td>
+          <td>${escapeHtml(l.dueDate)}</td>
+          <td>${l.returnDate && l.returnDate !== 'NONE' ? escapeHtml(l.returnDate) : '-'}</td>
+          <td>${statusBadge(l.status)}</td>
+        </tr>`
+      )
+      .join('');
+  }
+
+  // Overview Fines Table
+  const finesBody = $('ov-fines-body');
+  if (!appState.fines || appState.fines.length === 0) {
+    finesBody.innerHTML = '<tr><td colspan="6" class="muted">Khong co khoan phat nao.</td></tr>';
+  } else {
+    finesBody.innerHTML = appState.fines
+      .map(
+        (f) => `
+        <tr>
+          <td><strong>${escapeHtml(f.fineId)}</strong></td>
+          <td>${escapeHtml(f.loanId)}</td>
+          <td>${f.daysOverdue} ngay</td>
+          <td>${Number(f.amount).toLocaleString('vi-VN')} d</td>
+          <td>${f.paymentDate && f.paymentDate !== 'NONE' ? escapeHtml(f.paymentDate) : '-'}</td>
+          <td>${statusBadge(f.paidStatus)}</td>
+        </tr>`
+      )
+      .join('');
+  }
+
+  // 2. CATALOGUE TABLE
+  renderCatalogue();
+
+  // 3. CIRCULATION - RESERVATIONS TABLE (DONG BO MEMBER <-> LIBRARIAN)
+  const resBody = $('cir-res-body');
+  if (!appState.reservations || appState.reservations.length === 0) {
+    resBody.innerHTML = '<tr><td colspan="8" class="muted">Chua co phieu dat giu cho nao.</td></tr>';
+  } else {
+    resBody.innerHTML = appState.reservations
+      .map((r) => {
+        const copyLabel = r.copyId && r.copyId !== 'NONE' ? `<strong>${escapeHtml(r.copyId)}</strong>` : '-';
+        let statusHtml = statusBadge(r.status);
+        if (!isStaff && r.status === 'Ready') {
+          statusHtml += `<span class="sub-note">Sach san sang nhan tai quay</span>`;
+        } else if (!isStaff && r.status === 'Pending') {
+          statusHtml += `<span class="sub-note" style="color:#92400e;">Cho Thu thu xac nhan</span>`;
+        }
+
+        let actions = '-';
+        if (isStaff) {
+          const btns = [];
+          if (r.status === 'Pending') {
+            btns.push(
+              `<button class="btn btn-teal btn-xs" onclick="handleHoldAction('approve','${escapeHtml(r.reservationId)}')">Duyet</button>`
+            );
+          }
+          if (r.status === 'Pending' || r.status === 'Ready') {
+            btns.push(
+              `<button class="btn btn-primary btn-xs" onclick="handleHoldAction('fulfill','${escapeHtml(r.reservationId)}')">Giao sach</button>`
+            );
+            btns.push(
+              `<button class="btn btn-danger btn-xs" onclick="handleHoldAction('cancel','${escapeHtml(r.reservationId)}')">Huy</button>`
+            );
+          }
+          actions = btns.length ? `<div class="btn-row" style="margin:0;">${btns.join('')}</div>` : '-';
+        } else if (r.status === 'Pending' || r.status === 'Ready') {
+          actions = `<button class="btn btn-danger btn-xs" onclick="handleHoldAction('cancel','${escapeHtml(r.reservationId)}')">Huy dat cho</button>`;
+        }
+
+        return `
+          <tr>
+            <td><strong>${escapeHtml(r.reservationId)}</strong></td>
+            <td>${escapeHtml(r.memberId)}</td>
+            <td>${escapeHtml(r.bookId)}</td>
+            <td>${copyLabel}</td>
+            <td>${escapeHtml(r.requestDate)}</td>
+            <td>${escapeHtml(r.expiryDate)}</td>
+            <td>${statusHtml}</td>
+            <td>${actions}</td>
+          </tr>`;
+      })
+      .join('');
+  }

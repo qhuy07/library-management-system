@@ -218,3 +218,57 @@ int safeInt(const string& s, int fallback) {
 double safeDouble(const string& s, double fallback) {
     try { return s.empty() ? fallback : stod(s); } catch (...) { return fallback; }
 }
+
+int main() {
+    httplib::Server svr;
+    svr.set_mount_point("/", "./public");
+
+    // 1. Dang nhap
+    svr.Post("/api/login", [](const httplib::Request& req, httplib::Response& res) {
+        lock_guard<mutex> lock(g_mtx);
+        string email = req.get_param_value("email");
+        string pass  = req.get_param_value("password");
+        User* u = g_ctrl.login(email, pass);
+        if (!u) {
+            res.set_content("{\"ok\":false,\"message\":\"Wrong email or password!\"}", "application/json; charset=utf-8");
+            return;
+        }
+        ostringstream os;
+        os << "{\"ok\":true,\"user\":{"
+           << "\"userId\":\"" << jsonEscape(u->getUserId()) << "\","
+           << "\"fullName\":\"" << jsonEscape(u->getFullName()) << "\","
+           << "\"email\":\"" << jsonEscape(u->getEmail()) << "\","
+           << "\"role\":\"" << jsonEscape(u->getRole()) << "\""
+           << "}}";
+        res.set_content(os.str(), "application/json; charset=utf-8");
+    });
+
+    // 1b. Dang ky tai khoan Doc gia (Member) moi ngay tai trang Dang nhap
+    svr.Post("/api/register", [](const httplib::Request& req, httplib::Response& res) {
+        lock_guard<mutex> lock(g_mtx);
+        string name = req.get_param_value("name");
+        string email = req.get_param_value("email");
+        string pass = req.get_param_value("password");
+        string confirm = req.get_param_value("confirmPassword");
+
+        if (!confirm.empty() && pass != confirm) {
+            res.set_content("{\"ok\":false,\"message\":\"Error: Confirm password not match!\"}", "application/json; charset=utf-8");
+            return;
+        }
+
+        string msg, newId;
+        bool ok = g_ctrl.registerMember(name, email, pass, msg, newId);
+        if (!ok) {
+            res.set_content("{\"ok\":false,\"message\":\"" + jsonEscape(msg) + "\"}", "application/json; charset=utf-8");
+            return;
+        }
+
+        ostringstream os;
+        os << "{\"ok\":true,\"message\":\"" << jsonEscape(msg) << "\",\"user\":{"
+           << "\"userId\":\"" << jsonEscape(newId) << "\","
+           << "\"fullName\":\"" << jsonEscape(name) << "\","
+           << "\"email\":\"" << jsonEscape(email) << "\","
+           << "\"role\":\"Member\""
+           << "}}";
+        res.set_content(os.str(), "application/json; charset=utf-8");
+    });

@@ -223,3 +223,60 @@
           </div>
         </div>
       </section>      
+<!-- TAB 3: CIRCULATION -->
+      <section id="tab-circulation" class="tab-panel hidden">
+        <div class="auto-two-col">
+          <div class="card member-only">
+            <div class="card-title">Dat giu cho sach (Hold)</div>
+            <div class="field">
+              <label>Ma Dau sach (BookID - de Dat giu cho)</label>
+              <input type="text" id="cir-book-id" value="B02" />
+            </div>
+            <div class="btn-row">
+              <button type="button" id="btn-hold" class="btn btn-primary">Dat Giu Cho (Hold)</button>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-title">Tra sach (Return), Gia han (Renew) &amp; Thu phat</div>
+            <div class="field">
+              <label>Ma Phieu muon (LoanID)</label>
+              <input type="text" id="cir-loan-id" value="L01" />
+            </div>
+            <div class="field staff-only">
+              <label>Ngay giao dich (YYYY-MM-DD - thoi gian thuc)</label>
+              <input type="date" id="cir-date" />
+            </div>
+            <div class="field staff-only">
+              <label>Ma Phieu phat (FineID)</label>
+              <input type="text" id="cir-fine-id" value="F01" />
+            </div>
+            <div class="btn-row">
+              <button type="button" id="btn-return" class="btn btn-teal staff-only">Nhan Tra &amp; Tinh Phat</button>
+              <button type="button" id="btn-renew" class="btn btn-mint">Gia Han (+7d)</button>
+              <button type="button" id="btn-pay-fine" class="btn btn-teal staff-only">Thu Tien Phat</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="card" style="margin-top:16px;">
+          <div class="card-title">Danh sach Phieu dat giu cho (Reservations)</div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Res ID</th>
+                  <th>Member ID</th>
+                  <th>Book ID</th>
+                  <th>Ban sao (Copy)</th>
+                  <th>Ngay dat</th>
+                  <th>Het han</th>
+                  <th>Trang thai</th>
+                  <th>Thao tac</th>
+                </tr>
+              </thead>
+              <tbody id="cir-res-body"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>

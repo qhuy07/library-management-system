@@ -370,6 +370,45 @@ public:
             if (line.empty()) continue;
             stringstream ss(line);
             BookCopy c;
+        loans.clear();
+        ifstream fl("db_loans.csv");
+        while (getline(fl, line)) {
+            if (line.empty()) continue;
+            stringstream ss(line);
+            Loan l; string rcnt;
+            getline(ss, l.loanId, ',');      getline(ss, l.memberId, ',');
+            getline(ss, l.librarianId, ','); getline(ss, l.copyId, ',');
+            getline(ss, l.issueDate, ',');   getline(ss, l.dueDate, ',');
+            getline(ss, l.returnDate, ',');  getline(ss, rcnt, ',');
+            getline(ss, l.status, ',');
+            try { l.renewalCount = stoi(rcnt); } catch (...) { l.renewalCount = 0; }
+            loans.push_back(l);
+        }
+
+        reservations.clear();
+        ifstream fr("db_reservations.csv");
+        while (getline(fr, line)) {
+            if (line.empty()) continue;
+            stringstream ss(line);
+            Reservation r;
+            getline(ss, r.reservationId, ','); getline(ss, r.requestDate, ','); getline(ss, r.expiryDate, ',');
+            getline(ss, r.status, ','); getline(ss, r.memberId, ','); getline(ss, r.bookId, ',');
+            if (!getline(ss, r.copyId, ',') || r.copyId.empty()) r.copyId = "NONE";
+            reservations.push_back(r);
+        }
+
+        fines.clear();
+        ifstream ff("db_fines.csv");
+        while (getline(ff, line)) {
+            if (line.empty()) continue;
+            stringstream ss(line);
+            Fine f; string days, amt;
+            getline(ss, f.fineId, ','); getline(ss, days, ','); getline(ss, amt, ',');
+            getline(ss, f.paidStatus, ','); getline(ss, f.paymentDate, ','); getline(ss, f.loanId, ',');
+            f.daysOverdue = stoi(days); f.amount = stod(amt);
+            fines.push_back(f);
+        }
+    }
             getline(ss, c.copyId, ','); getline(ss, c.barcode, ','); getline(ss, c.rackLocation, ',');
             getline(ss, c.copyStatus, ','); getline(ss, c.bookId, ',');
             bookCopies.push_back(c);

@@ -106,3 +106,29 @@ string GetMembersListText() {
                " | Dang muon: " + to_string(m.activeLoansCount) + "/" + to_string(m.maxQuota) + " | No phat: " + to_string((int)m.totalUnpaidFines) + " d\r\n";
     return res;
 }
+
+void ShowLoginScreen(HWND hwnd) {
+    SetGroupVisible(g_loginScreen, true);
+    SetGroupVisible(g_registerScreen, false);
+    SetGroupVisible(g_appShell, false);
+    SetGroupVisible(g_tabOverview, false);
+    SetGroupVisible(g_tabCatalogue, false);
+    SetGroupVisible(g_tabCirculation, false);
+    SetGroupVisible(g_tabMembers, false);
+    SetGroupVisible(g_tabReports, false);
+    InvalidateRect(hwnd, NULL, TRUE);
+}
+
+void ShowRegisterScreen(HWND hwnd) {
+    SetGroupVisible(g_loginScreen, false);
+    SetGroupVisible(g_registerScreen, true);
+    SetGroupVisible(g_appShell, false);
+    SetGroupVisible(g_tabOverview, false);
+    SetGroupVisible(g_tabCatalogue, false);
+    SetGroupVisible(g_tabCirculation, false);
+    SetGroupVisible(g_tabMembers, false);
+    SetGroupVisible(g_tabReports, false);
+    SetWindowTextA(hRegStatus, "Dang ky tai khoan Doc gia (Member) moi.");
+    InvalidateRect(hwnd, NULL, TRUE);
+}
+

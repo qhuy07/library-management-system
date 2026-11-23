@@ -132,3 +132,36 @@ void ShowRegisterScreen(HWND hwnd) {
     InvalidateRect(hwnd, NULL, TRUE);
 }
 
+void SwitchTab(HWND hwnd, int tabId) {
+    g_activeTab = tabId;
+    SetGroupVisible(g_loginScreen, false);
+    SetGroupVisible(g_registerScreen, false);
+    SetGroupVisible(g_appShell, true);
+
+    SetGroupVisible(g_tabOverview,    tabId == ID_TAB_OVERVIEW);
+    SetGroupVisible(g_tabCatalogue,   tabId == ID_TAB_CATALOGUE);
+    SetGroupVisible(g_tabCirculation, tabId == ID_TAB_CIRCULATION);
+    SetGroupVisible(g_tabMembers,     tabId == ID_TAB_MEMBERS);
+    SetGroupVisible(g_tabReports,     tabId == ID_TAB_REPORTS);
+
+    SetWindowTextA(hDateLabel, DateUtils::today().c_str());
+
+    if (tabId == ID_TAB_OVERVIEW) {
+        SetWindowTextA(hHeaderPath, "Diamond Library  >  Overview (Tong quan he thong)");
+        RefreshOverviewData();
+    } else if (tabId == ID_TAB_CATALOGUE) {
+        SetWindowTextA(hHeaderPath, "Diamond Library  >  Catalogue (Quan ly Kho sach & Ban sao - Process 2.0)");
+        SetWindowTextA(hCatOutput, g_ctrl.searchBook("").c_str());
+    } else if (tabId == ID_TAB_CIRCULATION) {
+        SetWindowTextA(hHeaderPath, "Diamond Library  >  Circulation (Muon, Tra, Gia han, Dat cho & Thu phat - Process 3.0 & 4.0)");
+        SetWindowTextA(hCirDay, DateUtils::today().c_str());
+        SetWindowTextA(hCirOutput, g_ctrl.searchBook("").c_str());
+    } else if (tabId == ID_TAB_MEMBERS) {
+        SetWindowTextA(hHeaderPath, "Diamond Library  >  Members & Staff (Quan ly Tai khoan - Process 1.0)");
+        SetWindowTextA(hMemOutput, GetMembersListText().c_str());
+    } else if (tabId == ID_TAB_REPORTS) {
+        SetWindowTextA(hHeaderPath, "Diamond Library  >  Reports & Policy (Bao cao & Cau hinh quy dinh - Process 5.0)");
+        SetWindowTextA(hRepOutput, g_ctrl.exportAuditReport().c_str());
+    }
+    InvalidateRect(hwnd, NULL, TRUE);
+}

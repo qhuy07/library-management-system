@@ -284,3 +284,54 @@ int main() {
         g_ctrl.syncReservations();
         res.set_content(buildStateJson(actor), "application/json; charset=utf-8");
     });
+
+    // 3. Quan ly kho sach (Chi Librarian & Administrator)
+    svr.Post("/api/books/add", [](const httplib::Request& req, httplib::Response& res) {
+        lock_guard<mutex> lock(g_mtx);
+        User* actor = getActor(req);
+        if (!actor || (actor->getRole() != "Librarian" && actor->getRole() != "Administrator")) {
+            return sendForbidden(res, "Tu choi: Chi Librarian hoac Administrator moi co quyen them sach!");
+        }
+        string msg = g_ctrl.addBookAndCopy(
+            req.get_param_value("bookId"),
+            req.get_param_value("title"),
+            req.get_param_value("author"),
+            req.get_param_value("copyId"),
+            req.get_param_value("barcode")
+        );
+        res.set_content("{\"ok\":true,\"message\":\"" + jsonEscape(msg) + "\"}", "application/json; charset=utf-8");
+    });
+
+    svr.Post("/api/books/update", [](const httplib::Request& req, httplib::Response& res) {
+        lock_guard<mutex> lock(g_mtx);
+        User* actor = getActor(req);
+        if (!actor || (actor->getRole() != "Librarian" && actor->getRole() != "Administrator")) {
+            return sendForbidden(res, "Tu choi: Chi Librarian hoac Administrator moi co quyen sua sach!");
+        }
+        string msg = g_ctrl.updateBook(
+            req.get_param_value("bookId"),
+            req.get_param_value("title"),
+            req.get_param_value("author")
+        );
+        res.set_content("{\"ok\":true,\"message\":\"" + jsonEscape(msg) + "\"}", "application/json; charset=utf-8");
+    });
+
+    svr.Post("/api/books/delete", [](const httplib::Request& req, httplib::Response& res) {
+        lock_guard<mutex> lock(g_mtx);
+        User* actor = getActor(req);
+        if (!actor || (actor->getRole() != "Librarian" && actor->getRole() != "Administrator")) {
+            return sendForbidden(res, "Tu choi: Chi Librarian hoac Administrator moi co quyen xoa sach!");
+        }
+        string msg = g_ctrl.deleteBook(req.get_param_value("bookId"));
+        res.set_content("{\"ok\":true,\"message\":\"" + jsonEscape(msg) + "\"}", "application/json; charset=utf-8");
+    });
+
+    svr.Post("/api/copies/delete", [](const httplib::Request& req, httplib::Response& res) {
+        lock_guard<mutex> lock(g_mtx);
+        User* actor = getActor(req);
+        if (!actor || (actor->getRole() != "Librarian" && actor->getRole() != "Administrator")) {
+            return sendForbidden(res, "Tu choi: Chi Librarian hoac Administrator moi co quyen xoa ban sao sach!");
+        }
+        string msg = g_ctrl.deleteCopy(req.get_param_value("copyId"));
+        res.set_content("{\"ok\":true,\"message\":\"" + jsonEscape(msg) + "\"}", "application/json; charset=utf-8");
+    });

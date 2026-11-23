@@ -377,3 +377,49 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
         EndPaint(hwnd, &ps);
         return 0;
     }
+    case WM_COMMAND: {
+        int id = LOWORD(wParam);
+        if (id == ID_BTN_LOGIN) {
+            User* u = g_ctrl.login(GetStr(hLoginEmail), GetStr(hLoginPass));
+            if (u) {
+                g_user = u;
+                SetWindowTextA(hUserFooter, (u->getFullName() + "\n[" + u->getRole() + "]").c_str());
+                SwitchTab(hwnd, ID_TAB_OVERVIEW);
+            } else {
+                SetWindowTextA(hLoginStatus, "LOI: Sai Email hoac Mat khau! Vui long kiem tra lai.");
+            }
+        }
+        else if (id == ID_BTN_GO_REGISTER) {
+            ShowRegisterScreen(hwnd);
+        }
+        else if (id == ID_BTN_BACK_LOGIN) {
+            ShowLoginScreen(hwnd);
+        }
+        else if (id == ID_BTN_REGISTER) {
+            string name = GetStr(hRegName);
+            string email = GetStr(hRegEmail);
+            string pass = GetStr(hRegPass);
+            string confirm = GetStr(hRegConfirm);
+            if (pass != confirm) {
+                SetWindowTextA(hRegStatus, "Error: Confirm password not match!");
+            } else {
+                string msg, newId;
+                if (g_ctrl.registerMember(name, email, pass, msg, newId)) {
+                    SetWindowTextA(hLoginEmail, email.c_str());
+                    SetWindowTextA(hLoginPass, "");
+                    SetWindowTextA(hLoginStatus, (msg + "\nHay dang nhap bang tai khoan vua tao!").c_str());
+                    SetWindowTextA(hRegName, "");
+                    SetWindowTextA(hRegEmail, "");
+                    SetWindowTextA(hRegPass, "");
+                    SetWindowTextA(hRegConfirm, "");
+                    ShowLoginScreen(hwnd);
+                } else {
+                    SetWindowTextA(hRegStatus, msg.c_str());
+                }
+            }
+        }
+        else if (id == ID_BTN_LOGOUT) {
+            g_user = nullptr;
+            SetWindowTextA(hLoginStatus, "Log out of the system.");
+            ShowLoginScreen(hwnd);
+        }

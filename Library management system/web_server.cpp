@@ -352,3 +352,50 @@ int main() {
         );
         res.set_content("{\"ok\":true,\"message\":\"" + jsonEscape(msg) + "\"}", "application/json; charset=utf-8");
     });
+// Dat giu cho: tat ca role (Member chi duoc dat cho chinh minh)
+    svr.Post("/api/circulation/hold", [](const httplib::Request& req, httplib::Response& res) {
+        lock_guard<mutex> lock(g_mtx);
+        User* actor = getActor(req);
+        if (!actor) return sendForbidden(res, "Chua dang nhap!");
+        string targetMember = (actor->getRole() == "Member")
+            ? actor->getUserId()
+            : req.get_param_value("memberId");
+        string msg = g_ctrl.reserveBook(targetMember, req.get_param_value("bookId"));
+        res.set_content("{\"ok\":true,\"message\":\"" + jsonEscape(msg) + "\"}", "application/json; charset=utf-8");
+    });
+
+    // Librarian/Admin duyet dat cho (Pending -> Ready, giu ban sao sang Reserved)
+    svr.Post("/api/circulation/hold/approve", [](const httplib::Request& req, httplib::Response& res) {
+        lock_guard<mutex> lock(g_mtx);
+        User* actor = getActor(req);
+        if (!actor || (actor->getRole() != "Librarian" && actor->getRole() != "Administrator")) {
+            return sendForbidden(res, "Tu choi: Chi Thu thu hoac Admin moi co quyen duyet dat cho!");
+        }
+        string msg = g_ctrl.approveReservation(req.get_param_value("reservationId"));
+        res.set_content("{\"ok\":true,\"message\":\"" + jsonEscape(msg) + "\"}", "application/json; charset=utf-8");
+    });
+
+    // Librarian/Admin giao sach tu phieu dat cho (Ready/Pending -> Fulfilled + tao Loan)
+    svr.Post("/api/circulation/hold/fulfill", [](const httplib::Request& req, httplib::Response& res) {
+        lock_guard<mutex> lock(g_mtx);
+        User* actor = getActor(req);
+        if (!actor || (actor->getRole() != "Librarian" && actor->getRole() != "Administrator")) {
+            return sendForbidden(res, "Tu choi: Chi Thu thu hoac Admin moi co quyen giao sach dat cho!");
+        }
+        string dateStr = req.has_param("date") ? req.get_param_value("date") : "";
+        string msg = g_ctrl.fulfillReservation(req.get_param_value("reservationId"), actor->getUserId(), dateStr);
+        res.set_content("{\"ok\":true,\"message\":\"" + jsonEscape(msg) + "\"}", "application/json; charset=utf-8");
+    });
+
+    // Member tu huy phieu cua minh HOAC Librarian/Admin huy bat ky phieu nao
+    svr.Post("/api/circulation/hold/cancel", [](const httplib::Request& req, httplib::Response& res) {
+        lock_guard<mutex> lock(g_mtx);
+        User* actor = getActor(req);
+        if (!actor) return sendForbidden(res, "Chua dang nhap!");
+        string msg = g_ctrl.cancelReservation(
+            req.get_param_value("reservationId"),
+            actor->getUserId(),
+            actor->getRole()
+        );
+        res.set_content("{\"ok\":true,\"message\":\"" + jsonEscape(msg) + "\"}", "application/json; charset=utf-8");
+    });

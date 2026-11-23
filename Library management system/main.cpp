@@ -306,3 +306,21 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
             cirG2, cirL4, hCirLoanId, cirL5, hCirDay, cirL6, hCirFineId, cirB3, cirB4, cirB5,
             cirG3, hCirOutput
         };
+
+
+        // MAN HINH 4: MEMBERS
+        HWND memG1 = MakeGroup(hwnd, " Dang ky & Tao tai khoan moi (Member / Librarian) ", 225, 45, 845, 130);
+        HWND memL1 = MakeLabel(hwnd, "Ho va Ten:", 245, 80, 75, 20);
+        hMemName   = MakeInput(hwnd, "Tran Van B", 325, 77, 180, 24);
+        HWND memL2 = MakeLabel(hwnd, "Email (@ut.edu.vn):", 520, 80, 125, 20);
+        hMemEmail  = MakeInput(hwnd, "vanb@ut.edu.vn", 650, 77, 180, 24);
+        HWND memL3 = MakeLabel(hwnd, "Vai tro:", 845, 80, 50, 20);
+        hMemRole   = MakeInput(hwnd, "Member", 900, 77, 150, 24);
+
+        HWND memB1 = MakeColorButton(hwnd, "Tao Tai Khoan Moi (Mac dinh Pass: 123)", ID_BTN_ADD_ACC, 245, 120, 805, 34);
+
+        HWND memG2 = MakeGroup(hwnd, " Danh sach Doc gia, Thu thu & Quan tri vien ", 225, 185, 845, 465);
+        hMemOutput = MakeBox(hwnd, "", 240, 210, 815, 425);
+
+        g_tabMembers = {memG1, memL1, hMemName, memL2, hMemEmail, memL3, hMemRole, memB1, memG2, hMemOutput};
+

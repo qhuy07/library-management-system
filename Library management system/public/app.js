@@ -439,3 +439,35 @@ window.deleteCopyById = async function (copyId) {
 $('btn-del-copy').addEventListener('click', async () => {
   await window.deleteCopyById($('cat-copy-id').value.trim());
 });
+$('btn-hold')?.addEventListener('click', async () => {
+  const data = await apiPost('/api/circulation/hold', {
+    bookId: $('cir-book-id').value.trim()
+  });
+  showToast(data.message, !data.ok);
+  await loadState();
+});
+
+$('btn-return').addEventListener('click', async () => {
+  const data = await apiPost('/api/circulation/return', {
+    loanId: $('cir-loan-id').value.trim(),
+    date: $('cir-date').value
+  });
+  showToast(data.message, !data.ok);
+  await loadState();
+});
+
+$('btn-renew').addEventListener('click', async () => {
+  const data = await apiPost('/api/circulation/renew', {
+    loanId: $('cir-loan-id').value.trim()
+  });
+  showToast(data.message, !data.ok);
+  await loadState();
+});
+
+$('btn-pay-fine').addEventListener('click', async () => {
+  const data = await apiPost('/api/circulation/pay-fine', {
+    fineId: $('cir-fine-id').value.trim()
+  });
+  showToast(data.message, !data.ok);
+  await loadState();
+});

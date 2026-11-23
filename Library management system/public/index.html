@@ -161,3 +161,65 @@
           </div>
         </div>
       </section>
+
+      <!-- TAB 2: CATALOGUE -->
+      <section id="tab-catalogue" class="tab-panel hidden">
+        <div class="card">
+          <div class="card-title">Tra cuu &amp; Quan ly Kho sach (Catalogue)</div>
+          <div class="form-row">
+            <div class="field" style="flex:2;">
+              <label>Tim kiem (Ten sach, Tac gia, BookID)</label>
+              <input type="text" id="cat-search" placeholder="Nhap tu khoa de loc nhanh..." />
+            </div>
+          </div>
+
+          <div id="cat-staff-controls" class="staff-only" style="margin-top:14px; padding-top:14px; border-top:1px solid #e6ece8;">
+            <div class="form-row">
+              <div class="field">
+                <label>Book ID</label>
+                <input type="text" id="cat-book-id" value="B05" />
+              </div>
+              <div class="field" style="flex:2;">
+                <label>Ten sach</label>
+                <input type="text" id="cat-title" placeholder="Chi Pheo" />
+              </div>
+              <div class="field">
+                <label>Tac gia</label>
+                <input type="text" id="cat-author" placeholder="Nam Cao" />
+              </div>
+              <div class="field">
+                <label>Copy ID</label>
+                <input type="text" id="cat-copy-id" value="C05" />
+              </div>
+              <div class="field">
+                <label>Barcode</label>
+                <input type="text" id="cat-barcode" value="NF-0200-01" />
+              </div>
+            </div>
+            <div class="btn-row">
+              <button type="button" id="btn-add-book" class="btn btn-primary">Them Sach &amp; Ban sao</button>
+              <button type="button" id="btn-upd-book" class="btn btn-teal">Cap nhat Sach</button>
+              <button type="button" id="btn-del-book" class="btn btn-danger">Xoa Dau sach</button>
+              <button type="button" id="btn-del-copy" class="btn btn-danger">Xoa Ban sao (Copy)</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="card" style="margin-top:16px;">
+          <div class="card-title">Danh muc Dau sach &amp; Ban sao vat ly</div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Book ID</th>
+                  <th>Ten sach</th>
+                  <th>Tac gia</th>
+                  <th>ISBN</th>
+                  <th>Cac ban sao (CopyID - Trang thai)</th>
+                </tr>
+              </thead>
+              <tbody id="cat-table-body"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>      

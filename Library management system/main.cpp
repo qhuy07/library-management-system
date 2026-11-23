@@ -270,3 +270,39 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
         hCatOutput = MakeBox(hwnd, "", 240, 235, 815, 400);
 
         g_tabCatalogue = {catG1, catL1, hCatBookId, catL2, hCatTitle, catB1, catL3, hCatAuthor, catL4, hCatCopyId, catL5, hCatBarcode, catB2, catB3, catB4, catG2, hCatOutput};
+    // MAN HINH 3: CIRCULATION
+        HWND cirG1 = MakeGroup(hwnd, " A. Muon sach (Borrow) & Dat giu cho (Hold) ", 225, 45, 415, 215);
+        HWND cirL1 = MakeLabel(hwnd, "Ma Doc gia (MemberID):", 240, 78, 150, 20);
+        hCirMemberId = MakeInput(hwnd, "U03", 400, 75, 220, 24);
+
+        HWND cirL2 = MakeLabel(hwnd, "Ma Ban sao (CopyID):", 240, 113, 150, 20);
+        hCirCopyId = MakeInput(hwnd, "C01", 400, 110, 220, 24);
+
+        HWND cirL3 = MakeLabel(hwnd, "Ma Dau sach (BookID):", 240, 148, 150, 20);
+        hCirBookId = MakeInput(hwnd, "B02", 400, 145, 220, 24);
+
+        HWND cirB1 = MakeColorButton(hwnd, "Cho Muon Sach (Borrow)", ID_BTN_BORROW, 240, 185, 185, 34);
+        HWND cirB2 = MakeColorButton(hwnd, "Dat Giu Cho (Hold)",     ID_BTN_HOLD,   435, 185, 185, 34);
+
+        HWND cirG2 = MakeGroup(hwnd, " B. Tra sach (Return), Gia han (Renew) & Thu Phat ", 655, 45, 415, 215);
+        HWND cirL4 = MakeLabel(hwnd, "Ma Phieu muon (LoanID):", 670, 78, 155, 20);
+        hCirLoanId = MakeInput(hwnd, "L01", 835, 75, 215, 24);
+
+        HWND cirL5 = MakeLabel(hwnd, "Ngay GD (YYYY-MM-DD):", 670, 113, 160, 20);
+        hCirDay = MakeInput(hwnd, DateUtils::today().c_str(), 835, 110, 215, 24);
+
+        HWND cirL6 = MakeLabel(hwnd, "Ma Phieu phat (FineID):", 670, 148, 155, 20);
+        hCirFineId = MakeInput(hwnd, "F01", 835, 145, 215, 24);
+
+        HWND cirB3 = MakeColorButton(hwnd, "Nhan Tra & Tinh Phat", ID_BTN_RETURN,   670, 185, 145, 34);
+        HWND cirB4 = MakeColorButton(hwnd, "Gia Han (+7d)",       ID_BTN_RENEW,    822, 185, 110, 34);
+        HWND cirB5 = MakeColorButton(hwnd, "Thu Tien Phat",       ID_BTN_PAY_FINE, 939, 185, 111, 34);
+
+        HWND cirG3 = MakeGroup(hwnd, " Ket qua giao dich & Trang thai ban sao sach ", 225, 270, 845, 380);
+        hCirOutput = MakeBox(hwnd, "", 240, 295, 815, 340);
+
+        g_tabCirculation = {
+            cirG1, cirL1, hCirMemberId, cirL2, hCirCopyId, cirL3, hCirBookId, cirB1, cirB2,
+            cirG2, cirL4, hCirLoanId, cirL5, hCirDay, cirL6, hCirFineId, cirB3, cirB4, cirB5,
+            cirG3, hCirOutput
+        };

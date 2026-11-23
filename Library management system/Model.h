@@ -248,3 +248,18 @@ public:
     void fulfillHold() { status = "Fulfilled"; }
     void markExpired() { status = "Expired"; }
 };
+class Fine {
+public:
+    string fineId;
+    int daysOverdue;
+    double amount;
+    string paidStatus;
+    string paymentDate;
+    string loanId;
+
+    void computeFee(double rate) { amount = daysOverdue * rate; }
+    void recordPayment(const string& dateStr) {
+        paidStatus = "Paid";
+        paymentDate = dateStr;
+    }
+};

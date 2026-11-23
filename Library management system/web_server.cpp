@@ -272,3 +272,15 @@ int main() {
            << "}}";
         res.set_content(os.str(), "application/json; charset=utf-8");
     });
+    // 2. Lay du lieu theo dung quyen cua tai khoan dang dang nhap
+    svr.Get("/api/state", [](const httplib::Request& req, httplib::Response& res) {
+        lock_guard<mutex> lock(g_mtx);
+        User* actor = getActor(req);
+        if (!actor) {
+            res.status = 401;
+            res.set_content("{\"ok\":false,\"message\":\"Chua dang nhap!\"}", "application/json; charset=utf-8");
+            return;
+        }
+        g_ctrl.syncReservations();
+        res.set_content(buildStateJson(actor), "application/json; charset=utf-8");
+    });

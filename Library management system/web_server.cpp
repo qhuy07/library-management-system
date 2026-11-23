@@ -410,3 +410,21 @@ int main() {
         string msg = g_ctrl.processReturn(req.get_param_value("loanId"), dateStr);
         res.set_content("{\"ok\":true,\"message\":\"" + jsonEscape(msg) + "\"}", "application/json; charset=utf-8");
     });
+ // Gia han: tat ca role (Member chi duoc gia han phieu cua chinh minh)
+    svr.Post("/api/circulation/renew", [](const httplib::Request& req, httplib::Response& res) {
+        lock_guard<mutex> lock(g_mtx);
+        User* actor = getActor(req);
+        if (!actor) return sendForbidden(res, "Chua dang nhap!");
+        string loanId = req.get_param_value("loanId");
+        if (actor->getRole() == "Member") {
+            bool ownsLoan = false;
+            for (const auto& l : g_db.loans) {
+                if (l.loanId == loanId && l.memberId == actor->getUserId()) { ownsLoan = true; break; }
+            }
+            if (!ownsLoan) {
+                return sendForbidden(res, "Tu choi: Ban chi duoc gia han phieu muon cua chinh minh!");
+            }
+        }
+        string msg = g_ctrl.renewLoan(loanId);
+        res.set_content("{\"ok\":true,\"message\":\"" + jsonEscape(msg) + "\"}", "application/json; charset=utf-8");
+    });

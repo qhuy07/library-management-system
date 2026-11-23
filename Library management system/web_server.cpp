@@ -27,3 +27,10 @@ string jsonEscape(const string& s) {
     }
     return out;
 }
+
+User* findUserById(const string& userId) {
+    for (auto& a : g_db.admins)     if (a.getUserId() == userId) return &a;
+    for (auto& l : g_db.librarians) if (l.getUserId() == userId) return &l;
+    for (auto& m : g_db.members)    if (m.getUserId() == userId) return &m;
+    return nullptr;
+}

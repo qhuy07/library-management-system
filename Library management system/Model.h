@@ -263,3 +263,37 @@ public:
         paymentDate = dateStr;
     }
 };
+
+class LibraryDatabase {
+public:
+    vector<Member> members;
+    vector<Librarian> librarians;
+    vector<Administrator> admins;
+    vector<Category> categories;
+    vector<Book> books;
+    vector<BookCopy> bookCopies;
+    vector<Loan> loans;
+    vector<Reservation> reservations;
+    vector<Fine> fines;
+
+    int defaultLoanDays = 14;
+    double fineRatePerDay = 5000.0;
+
+    LibraryDatabase() {
+        loadAll();
+    }
+
+    void seedDefaultData() {
+        string todayStr = DateUtils::today();
+
+        admins = {
+            Administrator("U01", "Trinh Quang Huy", "admin@ut.edu.vn", "123", 1, todayStr)
+        };
+        librarians = {
+            Librarian("U02", "Nguyen Hoang Long", "long@ut.edu.vn", "123", "STF-01", "Morning")
+        };
+        members = {
+            Member("U03", "Nguyen Van Truong", "truong@ut.edu.vn", "123", "CARD-101", 3, 0, 0.0),
+            Member("U04", "Nguy Thai Duong", "duong@ut.edu.vn", "123", "CARD-102", 3, 1, 0.0),
+            Member("U05", "Van Cong Toan", "toan@ut.edu.vn", "123", "CARD-103", 3, 1, 70000.0)
+        };

@@ -160,3 +160,43 @@ public:
         : User(id, name, mail, pwd, "Active", "Administrator"),
           adminLevel(level), lastAuditDate(auditDate) {}
 };
+
+
+class Category {
+public:
+    string categoryId;
+    string categoryName;
+    string shelfZone;
+
+    void updateShelfZone(const string& newZone) { shelfZone = newZone; }
+};
+
+class Book {
+public:
+    string bookId;
+    string isbn;
+    string title;
+    string author;
+    string publisher;
+    int pubYear;
+    string categoryId;
+
+    void updateMetadata(const string& t, const string& a, const string& p) {
+        title = t; author = a; publisher = p;
+    }
+};
+
+class BookCopy {
+public:
+    string copyId;
+    string barcode;
+    string rackLocation;
+    string copyStatus;
+    string bookId;
+
+    void markBorrowed() { copyStatus = "Borrowed"; }
+    void markReturned() { copyStatus = "Available"; }
+    void markReserved() { copyStatus = "Reserved"; }
+    bool isAvailable() const { return copyStatus == "Available"; }
+    bool isReserved()  const { return copyStatus == "Reserved"; }
+};

@@ -335,3 +335,20 @@ int main() {
         string msg = g_ctrl.deleteCopy(req.get_param_value("copyId"));
         res.set_content("{\"ok\":true,\"message\":\"" + jsonEscape(msg) + "\"}", "application/json; charset=utf-8");
     });
+// 4. Muon - Tra - Gia han - Dat cho - Thu phat
+    // Cho muon: chi Librarian & Administrator
+    svr.Post("/api/circulation/borrow", [](const httplib::Request& req, httplib::Response& res) {
+        lock_guard<mutex> lock(g_mtx);
+        User* actor = getActor(req);
+        if (!actor || (actor->getRole() != "Librarian" && actor->getRole() != "Administrator")) {
+            return sendForbidden(res, "Tu choi: Doc gia khong the tu tao phieu muon. Vui long lien he Thu thu!");
+        }
+        string dateStr = req.has_param("date") ? req.get_param_value("date") : req.get_param_value("day");
+        string msg = g_ctrl.issueLoan(
+            req.get_param_value("memberId"),
+            req.get_param_value("copyId"),
+            actor->getUserId(),
+            dateStr
+        );
+        res.set_content("{\"ok\":true,\"message\":\"" + jsonEscape(msg) + "\"}", "application/json; charset=utf-8");
+    });

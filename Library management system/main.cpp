@@ -165,3 +165,46 @@ void SwitchTab(HWND hwnd, int tabId) {
     }
     InvalidateRect(hwnd, NULL, TRUE);
 }
+
+LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
+    switch (uMsg) {
+    case WM_CREATE: {
+        // MAN HINH 0: DANG NHAP
+        HWND lgBox    = MakeGroup(hwnd, " LOG IN TO DIAMOND LIBRARY SYSTEM  ", 310, 120, 480, 410);
+        HWND lgTitle  = MakeLabel(hwnd, "DIAMOND LIBRARY", 425, 165, 280, 28, 22, true);
+        HWND lgSub    = MakeLabel(hwnd, "Please log in with account @ut.edu.vn", 395, 198, 320, 20);
+
+        HWND lgL1     = MakeLabel(hwnd, "Email login:", 350, 240, 115, 20, 16, true);
+        hLoginEmail   = MakeInput(hwnd, "long@ut.edu.vn", 470, 237, 270, 28);
+
+        HWND lgL2     = MakeLabel(hwnd, "Password:", 350, 282, 115, 20, 16, true);
+        hLoginPass    = MakeInput(hwnd, "123", 470, 279, 270, 28, true);
+
+        HWND lgBtn    = MakeColorButton(hwnd, "LOG IN TO SYSTEM", ID_BTN_LOGIN, 350, 326, 390, 38);
+        HWND lgRegBtn = MakeColorButton(hwnd, "No account? Register account now", ID_BTN_GO_REGISTER, 350, 374, 390, 34);
+        hLoginStatus  = MakeLabel(hwnd, "Test account (Pass: 123):\n- librarian: long@ut.edu.vn\n- Admin: admin@ut.edu.vn  |  Member: truong@ut.edu.vn", 350, 422, 390, 75);
+
+        g_loginScreen = {lgBox, lgTitle, lgSub, lgL1, hLoginEmail, lgL2, hLoginPass, lgBtn, lgRegBtn, hLoginStatus};
+
+        // MAN HINH 0B: DANG KY TAI KHOAN MOI
+        HWND rgBox     = MakeGroup(hwnd, " REGISTER NEW MEMBER ACCOUNT ", 310, 120, 480, 430);
+        HWND rgTitle   = MakeLabel(hwnd, "CREATE ACCOUNT DIAMOND", 420, 165, 290, 28, 22, true);
+        HWND rgSub     = MakeLabel(hwnd, "Register an account to search & Reserve and hold book", 385, 198, 340, 20);
+
+        HWND rgL1      = MakeLabel(hwnd, "Full name:", 345, 236, 120, 20, 16, true);
+        hRegName       = MakeInput(hwnd, "", 470, 233, 275, 28);
+
+        HWND rgL2      = MakeLabel(hwnd, "Email:", 345, 276, 120, 20, 16, true);
+        hRegEmail      = MakeInput(hwnd, "", 470, 273, 275, 28);
+
+        HWND rgL3      = MakeLabel(hwnd, "Pass:", 345, 316, 120, 20, 16, true);
+        hRegPass       = MakeInput(hwnd, "", 470, 313, 275, 28, true);
+
+        HWND rgL4      = MakeLabel(hwnd, "Password confirm:", 345, 356, 120, 20, 16, true);
+        hRegConfirm    = MakeInput(hwnd, "", 470, 353, 275, 28, true);
+
+        HWND rgBtn     = MakeColorButton(hwnd, "REGISTER ACCOUNT", ID_BTN_REGISTER, 345, 398, 400, 38);
+        HWND rgBackBtn = MakeColorButton(hwnd, "Have an account? Go to login page", ID_BTN_BACK_LOGIN, 345, 446, 400, 34);
+        hRegStatus     = MakeLabel(hwnd, "Register new member account.", 345, 492, 400, 45);
+
+        g_registerScreen = {rgBox, rgTitle, rgSub, rgL1, hRegName, rgL2, hRegEmail, rgL3, hRegPass, rgL4, hRegConfirm, rgBtn, rgBackBtn, hRegStatus};

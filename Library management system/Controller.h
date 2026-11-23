@@ -531,3 +531,30 @@ string reserveBook(const string& memberId, const string& bookId) {
         }
         return "[UC: Renew Book] Khong tim thay LoanID: " + loanId;
     }
+
+    string updateSystemPolicy(int newLoanDays, double newFineRate) {
+        if (newLoanDays > 0) db.defaultLoanDays = newLoanDays;
+        if (newFineRate > 0) db.fineRatePerDay = newFineRate;
+        return "[UC: Update Policy] Da cap nhat quy dinh: Muon toi da " + to_string(db.defaultLoanDays) +
+               " ngay | Phat tre: " + to_string((int)db.fineRatePerDay) + " VND/ngay.";
+    }
+
+    string exportAuditReport() {
+        double collected = 0, unpaid = 0;
+        for (const auto& f : db.fines) {
+            if (f.paidStatus == "Paid") collected += f.amount;
+            else unpaid += f.amount;
+        }
+        return "BAO CAO KIEM TOAN HE THONG (AUDIT REPORT - DFD 5.0)\r\n"
+               "Thoi diem xuat bao cao        : " + DateUtils::nowDateTime() + "\r\n"
+               "====================================================\r\n"
+               "- Tong dau sach (Book)        : " + to_string(db.books.size()) + "\r\n"
+               "- Tong ban sao vat ly (Copy)  : " + to_string(db.bookCopies.size()) + "\r\n"
+               "- Tong phieu muon (Loan)      : " + to_string(db.loans.size()) + "\r\n"
+               "- Tong phieu dat cho (Hold)   : " + to_string(db.reservations.size()) + "\r\n"
+               "- Tien phat da thu            : " + to_string((int)collected) + " VND\r\n"
+               "- Tien phat chua thu          : " + to_string((int)unpaid) + " VND\r\n";
+    }
+};
+
+#endif

@@ -229,3 +229,22 @@ public:
         return false;
     }
 };
+class Reservation {
+public:
+    string reservationId;
+    string requestDate;
+    string expiryDate;
+    string status;          // Pending | Ready | Fulfilled | Cancelled | Expired
+    string memberId;
+    string bookId;
+    string copyId = "NONE"; // Ma ban sao dang duoc giu (neu status == Ready/Fulfilled)
+
+    void markReady(const string& heldCopyId, const string& newExpiry) {
+        copyId = heldCopyId;
+        expiryDate = newExpiry;
+        status = "Ready";
+    }
+    void cancelHold()  { status = "Cancelled"; }
+    void fulfillHold() { status = "Fulfilled"; }
+    void markExpired() { status = "Expired"; }
+};

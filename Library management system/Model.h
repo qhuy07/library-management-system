@@ -325,3 +325,29 @@ public:
         };
         saveAll();
     }
+
+    void loadAll() {
+        ifstream fCheck("db_users.csv");
+        if (!fCheck.is_open()) {
+            seedDefaultData();
+            return;
+        }
+        fCheck.close();
+
+        members.clear(); librarians.clear(); admins.clear();
+        ifstream fu("db_users.csv");
+        string line;
+        while (getline(fu, line)) {
+            if (line.empty()) continue;
+            stringstream ss(line);
+            string role, id, name, mail, pwd, extra1, extra2, extra3;
+            getline(ss, role, ','); getline(ss, id, ','); getline(ss, name, ',');
+            getline(ss, mail, ','); getline(ss, pwd, ',');
+            getline(ss, extra1, ','); getline(ss, extra2, ','); getline(ss, extra3, ',');
+            if (role == "Member")
+                members.push_back(Member(id, name, mail, pwd, extra1, 3, stoi(extra2), stod(extra3)));
+            else if (role == "Librarian")
+                librarians.push_back(Librarian(id, name, mail, pwd, extra1, extra2));
+            else if (role == "Administrator")
+                admins.push_back(Administrator(id, name, mail, pwd, stoi(extra1), extra2));
+        }

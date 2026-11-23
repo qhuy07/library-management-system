@@ -438,3 +438,24 @@ int main() {
         string msg = g_ctrl.collectFine(req.get_param_value("fineId"));
         res.set_content("{\"ok\":true,\"message\":\"" + jsonEscape(msg) + "\"}", "application/json; charset=utf-8");
     });
+ // 5. Quan ly tai khoan
+    // Librarian chi duoc tao Member; Administrator tao duoc ca Member & Librarian
+    svr.Post("/api/members/add", [](const httplib::Request& req, httplib::Response& res) {
+        lock_guard<mutex> lock(g_mtx);
+        User* actor = getActor(req);
+        if (!actor || actor->getRole() == "Member") {
+            return sendForbidden(res, "Tu choi: Doc gia khong co quyen tao tai khoan!");
+        }
+        string targetRole = req.get_param_value("role");
+        if (actor->getRole() == "Librarian" && targetRole != "Member") {
+            return sendForbidden(res, "Tu choi: Thu thu chi duoc tao tai khoan Member. Chi Admin moi tao duoc Librarian!");
+        }
+        string newId = g_ctrl.generateNextUserId();
+        string msg = g_ctrl.createStaffOrMember(
+            targetRole,
+            newId,
+            req.get_param_value("name"),
+            req.get_param_value("email")
+        );
+        res.set_content("{\"ok\":true,\"message\":\"" + jsonEscape(msg) + "\"}", "application/json; charset=utf-8");
+    });

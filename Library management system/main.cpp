@@ -246,3 +246,27 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
         hBoxAttention = MakeBox(hwnd, "", 735, 242, 320, 392);
 
         g_tabOverview = {ovB1, ovB2, ovK1, hStatLoans, ovK2, hStatAvail, ovK3, hStatOverdue, ovK4, hStatMembers, ovRec, hBoxRecent, ovAtt, hBoxAttention};
+
+        // MAN HINH 2: CATALOGUE
+        HWND catG1 = MakeGroup(hwnd, " Nhap thong tin Dau sach (Book) & Ban sao vat ly (BookCopy) ", 225, 45, 845, 155);
+        HWND catL1 = MakeLabel(hwnd, "Book ID:", 245, 78, 60, 20);
+        hCatBookId = MakeInput(hwnd, "B05", 310, 75, 80, 24);
+        HWND catL2 = MakeLabel(hwnd, "Ten sach / Tu khoa:", 410, 78, 125, 20);
+        hCatTitle  = MakeInput(hwnd, "", 540, 75, 240, 24);
+        HWND catB1 = MakeColorButton(hwnd, "Tim kiem sach", ID_BTN_SEARCH, 800, 73, 250, 28);
+
+        HWND catL3 = MakeLabel(hwnd, "Tac gia:", 245, 118, 60, 20);
+        hCatAuthor = MakeInput(hwnd, "Nam Cao", 310, 115, 170, 24);
+        HWND catL4 = MakeLabel(hwnd, "Copy ID:", 500, 118, 60, 20);
+        hCatCopyId = MakeInput(hwnd, "C05", 565, 115, 80, 24);
+        HWND catL5 = MakeLabel(hwnd, "Barcode:", 665, 118, 60, 20);
+        hCatBarcode = MakeInput(hwnd, "NF-0200-01", 730, 115, 120, 24);
+
+        HWND catB2 = MakeColorButton(hwnd, "Them Sach & Ban sao", ID_BTN_ADD_BOOK, 245, 155, 255, 32);
+        HWND catB3 = MakeColorButton(hwnd, "Cap nhat thong tin Sach", ID_BTN_UPD_BOOK, 520, 155, 255, 32);
+        HWND catB4 = MakeColorButton(hwnd, "Xoa Dau sach (Delete)", ID_BTN_DEL_BOOK, 795, 155, 255, 32);
+
+        HWND catG2 = MakeGroup(hwnd, " Danh sach Dau sach & Ban sao trong kho ", 225, 210, 845, 440);
+        hCatOutput = MakeBox(hwnd, "", 240, 235, 815, 400);
+
+        g_tabCatalogue = {catG1, catL1, hCatBookId, catL2, hCatTitle, catB1, catL3, hCatAuthor, catL4, hCatCopyId, catL5, hCatBarcode, catB2, catB3, catB4, catG2, hCatOutput};

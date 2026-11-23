@@ -471,3 +471,22 @@ $('btn-pay-fine').addEventListener('click', async () => {
   showToast(data.message, !data.ok);
   await loadState();
 });
+
+$('btn-add-member').addEventListener('click', async () => {
+  const data = await apiPost('/api/members/add', {
+    name: $('mem-name').value.trim(),
+    email: $('mem-email').value.trim(),
+    role: $('mem-role').value
+  });
+  showToast(data.message, !data.ok);
+  await loadState();
+});
+
+$('btn-save-policy').addEventListener('click', async () => {
+  const data = await apiPost('/api/policy/update', {
+    maxDays: $('rep-max-days').value,
+    fineRate: $('rep-fine-rate').value
+  });
+  showToast(data.message, !data.ok);
+  await loadState();
+});

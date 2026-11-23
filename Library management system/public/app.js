@@ -391,3 +391,51 @@ $('register-form').addEventListener('submit', async (e) => {
 
 $('btn-logout').addEventListener('click', logout);
 
+document.querySelectorAll('.nav-btn').forEach((btn) => {
+  btn.addEventListener('click', () => {
+    switchTab(btn.dataset.tab);
+    loadState(true);
+  });
+});
+
+$('cat-search').addEventListener('input', renderCatalogue);
+
+$('btn-add-book').addEventListener('click', async () => {
+  const data = await apiPost('/api/books/add', {
+    bookId: $('cat-book-id').value.trim(),
+    title: $('cat-title').value.trim(),
+    author: $('cat-author').value.trim(),
+    copyId: $('cat-copy-id').value.trim(),
+    barcode: $('cat-barcode').value.trim()
+  });
+  showToast(data.message, !data.ok);
+  await loadState();
+});
+
+$('btn-upd-book').addEventListener('click', async () => {
+  const data = await apiPost('/api/books/update', {
+    bookId: $('cat-book-id').value.trim(),
+    title: $('cat-title').value.trim(),
+    author: $('cat-author').value.trim()
+  });
+  showToast(data.message, !data.ok);
+  await loadState();
+});
+
+$('btn-del-book').addEventListener('click', async () => {
+  const data = await apiPost('/api/books/delete', {
+    bookId: $('cat-book-id').value.trim()
+  });
+  showToast(data.message, !data.ok);
+  await loadState();
+});
+
+window.deleteCopyById = async function (copyId) {
+  const data = await apiPost('/api/copies/delete', { copyId });
+  showToast(data.message, !data.ok);
+  await loadState();
+};
+
+$('btn-del-copy').addEventListener('click', async () => {
+  await window.deleteCopyById($('cat-copy-id').value.trim());
+});

@@ -459,3 +459,15 @@ int main() {
         );
         res.set_content("{\"ok\":true,\"message\":\"" + jsonEscape(msg) + "\"}", "application/json; charset=utf-8");
     });
+    // 6. Cap nhat chinh sach he thong (CHI Administrator)
+    svr.Post("/api/policy/update", [](const httplib::Request& req, httplib::Response& res) {
+        lock_guard<mutex> lock(g_mtx);
+        User* actor = getActor(req);
+        if (!actor || actor->getRole() != "Administrator") {
+            return sendForbidden(res, "Tu choi: Chi Administrator moi co quyen cau hinh chinh sach thu vien!");
+        }
+        int days = safeInt(req.get_param_value("maxDays"), 14);
+        double rate = safeDouble(req.get_param_value("fineRate"), 5000.0);
+        string msg = g_ctrl.updateSystemPolicy(days, rate);
+        res.set_content("{\"ok\":true,\"message\":\"" + jsonEscape(msg) + "\"}", "application/json; charset=utf-8");
+    });

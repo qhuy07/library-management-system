@@ -324,3 +324,56 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
 
         g_tabMembers = {memG1, memL1, hMemName, memL2, hMemEmail, memL3, hMemRole, memB1, memG2, hMemOutput};
 
+        // MAN HINH 5: REPORTS
+        HWND repG1 = MakeGroup(hwnd, " Cau hinh chinh sach Thu vien (Admin Only - Process 5.0) ", 225, 45, 845, 120);
+        HWND repL1 = MakeLabel(hwnd, "So ngay muon toi da:", 245, 80, 140, 20);
+        hRepMaxDays = MakeInput(hwnd, "14", 390, 77, 80, 24);
+        HWND repL2 = MakeLabel(hwnd, "Muc phat tre han (VND/ngay):", 495, 80, 190, 20);
+        hRepFineRate = MakeInput(hwnd, "5000", 690, 77, 110, 24);
+        HWND repB1 = MakeColorButton(hwnd, "Luu Quy Dinh & Xuat Bao Cao", ID_BTN_POLICY, 820, 73, 230, 34);
+
+        HWND repG2 = MakeGroup(hwnd, " Bao cao kiem toan & Thong ke hoat dong (Audit Report) ", 225, 175, 845, 475);
+        hRepOutput = MakeBox(hwnd, "", 240, 200, 815, 435);
+
+        g_tabReports = {repG1, repL1, hRepMaxDays, repL2, hRepFineRate, repB1, repG2, hRepOutput};
+
+        ShowLoginScreen(hwnd);
+        break;
+    }
+    case WM_CTLCOLORSTATIC: {
+        HDC hdcStatic = (HDC)wParam;
+        HWND hCtrl = (HWND)lParam;
+        SetBkMode(hdcStatic, TRANSPARENT);
+        if (hCtrl == hLoginStatus || hCtrl == hRegStatus) {
+            SetTextColor(hdcStatic, RGB(160, 45, 45));
+        } else if (hCtrl == hHeaderPath) {
+            SetTextColor(hdcStatic, COL_TEXT_MUTED);
+        } else {
+            SetTextColor(hdcStatic, COL_TEXT_DARK);
+        }
+        return (INT_PTR)GetCreamBrush();
+    }
+    case WM_CTLCOLOREDIT: {
+        HDC hdcEdit = (HDC)wParam;
+        SetTextColor(hdcEdit, COL_TEXT_DARK);
+        SetBkColor(hdcEdit, COL_SIDEBAR);
+        return (INT_PTR)GetWhiteBrush();
+    }
+    case WM_DRAWITEM: {
+        LPDRAWITEMSTRUCT dis = (LPDRAWITEMSTRUCT)lParam;
+        if (dis->CtlType == ODT_BUTTON) {
+            DrawStyledButton(dis, g_activeTab);
+            return TRUE;
+        }
+        break;
+    }
+    case WM_PAINT: {
+        PAINTSTRUCT ps;
+        HDC hdc = BeginPaint(hwnd, &ps);
+        if (!g_user) {
+            RECT banner = {312, 128, 788, 154};
+            FillRect(hdc, &banner, GetDarkGreenBrush());
+        }
+        EndPaint(hwnd, &ps);
+        return 0;
+    }

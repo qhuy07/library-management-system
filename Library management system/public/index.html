@@ -375,3 +375,40 @@
           <pre id="rep-output" class="audit-pre"></pre>
         </div>
       </section>
+
+            <!-- TAB 6: PROFILE (XEM & SUA THONG TIN CA NHAN) -->
+      <section id="tab-profile" class="tab-panel hidden">
+        <div class="two-col">
+          <div class="card">
+            <div class="card-title">Thong tin Tai khoan (Profile)</div>
+            <div id="profile-details" class="profile-info-list">
+              <p class="muted">Dang tai thong tin...</p>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-title">Chinh sua Thong tin Ca nhan</div>
+            <form id="profile-form">
+              <label>Ho va ten</label>
+              <input type="text" id="prof-name" placeholder="Nhap ho va ten" required />
+              <label>Email</label>
+              <input type="email" id="prof-email" placeholder="email@ut.edu.vn" required />
+              <label>Mat khau moi (de trong neu khong doi)</label>
+              <input type="password" id="prof-pass" placeholder="It nhat 3 ky tu" />
+              <label>Xac nhan mat khau moi</label>
+              <input type="password" id="prof-pass-confirm" placeholder="Nhap lai mat khau moi" />
+              <div class="btn-row">
+                <button type="submit" class="btn btn-primary">Luu thay doi</button>
+                <button type="button" id="btn-refresh-profile" class="btn btn-mint">Tai lai</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
+

@@ -1,0 +1,9 @@
+services:
+  diamond-lms:
+    build: .
+    container_name: diamond_lms_web
+    ports:
+      - "8080:8080"
+    environment:
+      - TZ=Asia/Ho_Chi_Minh
+    restart: unless-stopped

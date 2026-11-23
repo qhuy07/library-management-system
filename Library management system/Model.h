@@ -413,3 +413,38 @@ public:
             getline(ss, c.copyStatus, ','); getline(ss, c.bookId, ',');
             bookCopies.push_back(c);
         }
+
+    void saveAll() {
+        ofstream fu("db_users.csv");
+        for (const auto& a : admins)
+            fu << "Administrator," << a.getUserId() << "," << a.getFullName() << "," << a.getEmail() << "," << a.getPasswordHash() << "," << a.adminLevel << "," << a.lastAuditDate << ",0\n";
+        for (const auto& l : librarians)
+            fu << "Librarian," << l.getUserId() << "," << l.getFullName() << "," << l.getEmail() << "," << l.getPasswordHash() << "," << l.staffCode << "," << l.deskShift << ",0\n";
+        for (const auto& m : members)
+            fu << "Member," << m.getUserId() << "," << m.getFullName() << "," << m.getEmail() << "," << m.getPasswordHash() << "," << m.membershipCardNo << "," << m.activeLoansCount << "," << m.totalUnpaidFines << "\n";
+
+        ofstream fb("db_books.csv");
+        for (const auto& b : books)
+            fb << b.bookId << "," << b.isbn << "," << b.title << "," << b.author << "," << b.publisher << "," << b.pubYear << "," << b.categoryId << "\n";
+
+        ofstream fc("db_copies.csv");
+        for (const auto& c : bookCopies)
+            fc << c.copyId << "," << c.barcode << "," << c.rackLocation << "," << c.copyStatus << "," << c.bookId << "\n";
+
+        ofstream fl("db_loans.csv");
+        for (const auto& l : loans)
+            fl << l.loanId << "," << l.memberId << "," << l.librarianId << "," << l.copyId << "," << l.issueDate << "," << l.dueDate << "," << l.returnDate << "," << l.renewalCount << "," << l.status << "\n";
+
+        ofstream fr("db_reservations.csv");
+        for (const auto& r : reservations)
+            fr << r.reservationId << "," << r.requestDate << "," << r.expiryDate << ","
+               << r.status << "," << r.memberId << "," << r.bookId << "," << r.copyId << "\n";
+
+        ofstream ff("db_fines.csv");
+        for (const auto& f : fines)
+            ff << f.fineId << "," << f.daysOverdue << "," << f.amount << "," << f.paidStatus << "," << f.paymentDate << "," << f.loanId << "\n";
+    }
+};
+
+#endif
+

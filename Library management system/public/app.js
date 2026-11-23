@@ -233,3 +233,29 @@ function renderAll() {
       })
       .join('');
   }
+ // 4. MEMBERS TABLE (STAFF)
+  if (isStaff) {
+    const rows = [];
+    const isAdmin = currentUser.role === 'Administrator';
+    const editBtn = (u) => isAdmin
+      ? ` <button type="button" class="btn btn-mint btn-xs" style="margin-left:6px;" onclick="fillAdminEditUser('${escapeHtml(u.userId)}','${escapeHtml(u.fullName)}','${escapeHtml(u.email)}')">Sua</button>`
+      : '';
+    (appState.admins || []).forEach((a) => {
+      rows.push(`<tr><td><strong>${escapeHtml(a.userId)}</strong></td><td>${escapeHtml(a.fullName)}</td><td>${escapeHtml(a.email)}</td><td>Administrator</td><td>Quan tri he thong${editBtn(a)}</td></tr>`);
+    });
+    (appState.librarians || []).forEach((l) => {
+      rows.push(`<tr><td><strong>${escapeHtml(l.userId)}</strong></td><td>${escapeHtml(l.fullName)}</td><td>${escapeHtml(l.email)}</td><td>Librarian</td><td>Ma NV: ${escapeHtml(l.staffCode)} | Ca: ${escapeHtml(l.deskShift)}${editBtn(l)}</td></tr>`);
+    });
+    (appState.members || []).forEach((m) => {
+      rows.push(`<tr><td><strong>${escapeHtml(m.userId)}</strong></td><td>${escapeHtml(m.fullName)}</td><td>${escapeHtml(m.email)}</td><td>Member</td><td>The: ${escapeHtml(m.membershipCardNo)} | Muon: ${m.activeLoansCount}/${m.maxQuota} | No: ${Number(m.totalUnpaidFines).toLocaleString('vi-VN')} d${editBtn(m)}</td></tr>`);
+    });
+    $('mem-table-body').innerHTML = rows.join('');
+
+    // 5. REPORTS & POLICY
+    if (appState.policy) {
+      if (document.activeElement !== $('rep-max-days')) $('rep-max-days').value = appState.policy.defaultLoanDays;
+      if (document.activeElement !== $('rep-fine-rate')) $('rep-fine-rate').value = appState.policy.fineRatePerDay;
+    }
+    $('rep-output').textContent = appState.auditReport || '';
+  }
+}

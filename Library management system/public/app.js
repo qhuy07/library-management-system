@@ -259,3 +259,54 @@ function renderAll() {
     $('rep-output').textContent = appState.auditReport || '';
   }
 }
+
+function renderCatalogue() {
+  if (!appState) return;
+  const kw = ($('cat-search').value || '').trim().toLowerCase();
+  const tbody = $('cat-table-body');
+  const filtered = (appState.books || []).filter((b) => {
+    if (!kw) return true;
+    return (
+      b.bookId.toLowerCase().includes(kw) ||
+      b.title.toLowerCase().includes(kw) ||
+      b.author.toLowerCase().includes(kw)
+    );
+  });
+
+  if (filtered.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="5" class="muted">Khong tim thay dau sach phu hop.</td></tr>';
+    return;
+  }
+
+  tbody.innerHTML = filtered
+    .map((b) => {
+      const copies = (appState.bookCopies || []).filter((c) => c.bookId === b.bookId);
+      const copyHtml = copies.length
+        ? copies
+            .map(
+              (c) =>
+                `<div style="margin-bottom:4px;"><code>${escapeHtml(c.copyId)}</code> ${statusBadge(c.copyStatus)}</div>`
+            )
+            .join('')
+        : '<span class="muted">Chua co ban sao</span>';
+      return `
+        <tr>
+          <td><strong>${escapeHtml(b.bookId)}</strong></td>
+          <td>${escapeHtml(b.title)}</td>
+          <td>${escapeHtml(b.author)}</td>
+          <td>${escapeHtml(b.isbn)}</td>
+          <td>${copyHtml}</td>
+        </tr>`;
+    })
+    .join('');
+}
+
+window.handleHoldAction = async function (action, reservationId) {
+  const params = { reservationId };
+  if (action === 'fulfill' && $('cir-date').value) {
+    params.date = $('cir-date').value;
+  }
+  const data = await apiPost(`/api/circulation/hold/${action}`, params);
+  showToast(data.message || 'Da cap nhat trang thai dat cho.', !data.ok);
+  await loadState();
+};

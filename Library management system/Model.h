@@ -91,3 +91,72 @@ namespace DateUtils {
         return static_cast<int>(round(seconds / 86400.0));
     }
 }
+class User {
+protected:
+    string userId;
+    string fullName;
+    string email;
+    string passwordHash;
+    string status;
+    string role;
+
+public:
+    User(string id = "", string name = "", string mail = "", string pwd = "", string st = "Active", string r = "User")
+        : userId(id), fullName(name), email(mail), passwordHash(pwd), status(st), role(r) {}
+
+    virtual ~User() {}
+
+    bool login(const string& inputEmail, const string& pwd) {
+        return (email == inputEmail && passwordHash == pwd && status == "Active");
+    }
+    void logout() {}
+    void updateProfile(const string& newName) { fullName = newName; }
+    void updateEmail(const string& newEmail) { email = newEmail; }
+    void updatePassword(const string& newPwd) { passwordHash = newPwd; }
+
+    string getUserId() const { return userId; }
+    string getFullName() const { return fullName; }
+    string getEmail() const { return email; }
+    string getPasswordHash() const { return passwordHash; }
+    string getStatus() const { return status; }
+    string getRole() const { return role; }
+};
+
+class Member : public User {
+public:
+    string membershipCardNo;
+    int maxQuota;
+    int activeLoansCount;
+    double totalUnpaidFines;
+
+    Member(string id = "", string name = "", string mail = "", string pwd = "",
+           string cardNo = "", int quota = 3, int active = 0, double fines = 0.0)
+        : User(id, name, mail, pwd, "Active", "Member"),
+          membershipCardNo(cardNo), maxQuota(quota), activeLoansCount(active), totalUnpaidFines(fines) {}
+
+    bool canBorrow() const {
+        return (status == "Active" && activeLoansCount < maxQuota && totalUnpaidFines <= 0.0);
+    }
+};
+
+class Librarian : public User {
+public:
+    string staffCode;
+    string deskShift;
+
+    Librarian(string id = "", string name = "", string mail = "", string pwd = "",
+              string code = "", string shift = "Morning")
+        : User(id, name, mail, pwd, "Active", "Librarian"),
+          staffCode(code), deskShift(shift) {}
+};
+
+class Administrator : public User {
+public:
+    int adminLevel;
+    string lastAuditDate;
+
+    Administrator(string id = "", string name = "", string mail = "", string pwd = "",
+                  int level = 1, string auditDate = DateUtils::today())
+        : User(id, name, mail, pwd, "Active", "Administrator"),
+          adminLevel(level), lastAuditDate(auditDate) {}
+};

@@ -471,3 +471,94 @@ int main() {
         string msg = g_ctrl.updateSystemPolicy(days, rate);
         res.set_content("{\"ok\":true,\"message\":\"" + jsonEscape(msg) + "\"}", "application/json; charset=utf-8");
     });
+   // 7. Xem thong tin nguoi dung dang dang nhap
+    svr.Get("/api/profile", [](const httplib::Request& req, httplib::Response& res) {
+        lock_guard<mutex> lock(g_mtx);
+        User* actor = getActor(req);
+        if (!actor) {
+            res.status = 401;
+            res.set_content("{\"ok\":false,\"message\":\"Chua dang nhap!\"}", "application/json; charset=utf-8");
+            return;
+        }
+
+        ostringstream os;
+        os << "{\"ok\":true,\"user\":{"
+           << "\"userId\":\"" << jsonEscape(actor->getUserId()) << "\","
+           << "\"fullName\":\"" << jsonEscape(actor->getFullName()) << "\","
+           << "\"email\":\"" << jsonEscape(actor->getEmail()) << "\","
+           << "\"role\":\"" << jsonEscape(actor->getRole()) << "\","
+           << "\"status\":\"" << jsonEscape(actor->getStatus()) << "\"";
+
+        if (actor->getRole() == "Member") {
+            for (const auto& m : g_db.members) {
+                if (m.getUserId() == actor->getUserId()) {
+                    os << ",\"membershipCardNo\":\"" << jsonEscape(m.membershipCardNo) << "\""
+                       << ",\"maxQuota\":" << m.maxQuota
+                       << ",\"activeLoansCount\":" << m.activeLoansCount
+                       << ",\"totalUnpaidFines\":" << (long long)m.totalUnpaidFines;
+                    break;
+                }
+            }
+        } else if (actor->getRole() == "Librarian") {
+            for (const auto& l : g_db.librarians) {
+                if (l.getUserId() == actor->getUserId()) {
+                    os << ",\"staffCode\":\"" << jsonEscape(l.staffCode) << "\""
+                       << ",\"deskShift\":\"" << jsonEscape(l.deskShift) << "\"";
+                    break;
+                }
+            }
+        } else if (actor->getRole() == "Administrator") {
+            for (const auto& a : g_db.admins) {
+                if (a.getUserId() == actor->getUserId()) {
+                    os << ",\"adminLevel\":" << a.adminLevel
+                       << ",\"lastAuditDate\":\"" << jsonEscape(a.lastAuditDate) << "\"";
+                    break;
+                }
+            }
+        }
+        os << "}}";
+        res.set_content(os.str(), "application/json; charset=utf-8");
+    });
+
+    // 8. Sua thong tin nguoi dung (Tu sua thong tin cua minh, hoac Admin sua cho userId khac)
+    svr.Post("/api/profile/update", [](const httplib::Request& req, httplib::Response& res) {
+        lock_guard<mutex> lock(g_mtx);
+        User* actor = getActor(req);
+        if (!actor) return sendForbidden(res, "Chua dang nhap!");
+
+        string targetId = req.has_param("targetUserId") && !req.get_param_value("targetUserId").empty()
+            ? req.get_param_value("targetUserId")
+            : actor->getUserId();
+
+        if (targetId != actor->getUserId() && actor->getRole() != "Administrator") {
+            return sendForbidden(res, "Tu choi: Ban chi co the sua thong tin cua chinh minh!");
+        }
+
+        string newName = req.get_param_value("fullName");
+        string newEmail = req.get_param_value("email");
+        string newPass = req.get_param_value("password");
+
+        string msg;
+        bool ok = g_ctrl.updateUserProfile(targetId, newName, newEmail, newPass, msg);
+        if (!ok) {
+            res.set_content("{\"ok\":false,\"message\":\"" + jsonEscape(msg) + "\"}", "application/json; charset=utf-8");
+            return;
+        }
+
+        User* updated = findUserById(targetId);
+        ostringstream os;
+        os << "{\"ok\":true,\"message\":\"" << jsonEscape(msg) << "\",\"user\":{"
+           << "\"userId\":\"" << jsonEscape(updated->getUserId()) << "\","
+           << "\"fullName\":\"" << jsonEscape(updated->getFullName()) << "\","
+           << "\"email\":\"" << jsonEscape(updated->getEmail()) << "\","
+           << "\"role\":\"" << jsonEscape(updated->getRole()) << "\""
+           << "}}";
+        res.set_content(os.str(), "application/json; charset=utf-8");
+    });
+
+    cout << "Diamond Library Web Server (RBAC Enabled) running at http://0.0.0.0:8080\n";
+    cout << "Server Time: " << DateUtils::nowDateTime() << "\n";
+    svr.listen("0.0.0.0", 8080);
+    return 0;
+}
+

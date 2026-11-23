@@ -246,3 +246,257 @@ input:focus, select:focus {
   color: #1e4d3b;
   border: 1px solid #bdd9cb;
 }
+
+.toast.error {
+  background: #fdecec;
+  color: #9f2626;
+  border-color: #f3c1c1;
+}
+
+/* HERO & KPI */
+.hero-banner {
+  background: #1e4d3b;
+  color: #ffffff;
+  border-radius: 12px;
+  padding: 20px 24px;
+  margin-bottom: 18px;
+}
+
+.hero-kicker {
+  font-size: 11px;
+  letter-spacing: 0.9px;
+  opacity: 0.85;
+  margin-bottom: 6px;
+  font-weight: 600;
+}
+
+.hero-title {
+  font-size: 19px;
+  font-weight: 700;
+}
+
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(150px, 1fr));
+  gap: 14px;
+  margin-bottom: 18px;
+}
+
+.kpi-card {
+  background: #ffffff;
+  border: 1px solid #e3ebe6;
+  border-radius: 12px;
+  padding: 16px 18px;
+}
+
+.kpi-label {
+  font-size: 13px;
+  color: #64736c;
+  margin-bottom: 8px;
+}
+
+.kpi-value {
+  font-size: 24px;
+  font-weight: 700;
+  color: #19231e;
+}
+
+/* CARDS & TABLES */
+.two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.auto-two-col {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+  gap: 16px;
+}
+
+.card {
+  background: #ffffff;
+  border: 1px solid #e3ebe6;
+  border-radius: 12px;
+  padding: 18px 20px;
+}
+
+.card-title {
+  font-weight: 700;
+  font-size: 15px;
+  margin-bottom: 14px;
+  color: #19231e;
+}
+
+.form-row {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.field {
+  flex: 1;
+  min-width: 140px;
+}
+
+.btn-row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 4px;
+}
+
+.btn {
+  padding: 9px 15px;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  font-size: 13.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.15s ease;
+}
+
+.btn:hover {
+  opacity: 0.92;
+}
+
+.btn-full {
+  width: 100%;
+}
+
+.btn-primary {
+  background: #1e4d3b;
+  color: #ffffff;
+}
+
+.btn-mint {
+  background: #e6f2ec;
+  color: #1e4d3b;
+  border-color: #bdd9cb;
+}
+
+.btn-teal {
+  background: #185f6e;
+  color: #ffffff;
+}
+
+.btn-danger {
+  background: #af3232;
+  color: #ffffff;
+}
+
+.btn-xs {
+  padding: 4px 9px;
+  font-size: 12px;
+  border-radius: 6px;
+}
+
+.table-wrap {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13.5px;
+}
+
+thead th {
+  background: #f4f6f3;
+  color: #485950;
+  text-align: left;
+  padding: 10px 12px;
+  font-weight: 600;
+  border-bottom: 1px solid #e3ebe6;
+  white-space: nowrap;
+}
+
+tbody td {
+  padding: 10px 12px;
+  border-bottom: 1px solid #eef2ef;
+  vertical-align: middle;
+}
+
+tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* BADGES */
+.badge {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.badge-warn   { background: #fef3c7; color: #92400e; }
+.badge-info   { background: #dbeafe; color: #1e40af; }
+.badge-ok     { background: #dcfce7; color: #166534; }
+.badge-danger { background: #fee2e2; color: #991b1b; }
+.badge-muted  { background: #e5e7eb; color: #4b5563; }
+
+.sub-note {
+  display: block;
+  font-size: 11.5px;
+  color: #1e40af;
+  margin-top: 3px;
+}
+
+.audit-pre {
+  background: #f4f6f3;
+  border: 1px solid #e3ebe6;
+  border-radius: 8px;
+  padding: 16px;
+  font-family: Consolas, Monaco, monospace;
+  font-size: 13.5px;
+  line-height: 1.6;
+  white-space: pre-wrap;
+}
+
+@media (max-width: 960px) {
+  .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+  .two-col  { grid-template-columns: 1fr; }
+}
+
+/* PROFILE */
+#sidebar-user-card {
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+#sidebar-user-card:hover {
+  background: #e6f2ec;
+  border-color: #bdd9cb;
+}
+
+.profile-info-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.profile-info-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 9px 12px;
+  background: #f4f6f3;
+  border: 1px solid #e3ebe6;
+  border-radius: 8px;
+  gap: 12px;
+}
+
+.profile-key {
+  font-size: 13px;
+  color: #64736c;
+  font-weight: 600;
+}
+
+.profile-val {
+  font-size: 13.5px;
+  color: #19231e;
+  font-weight: 600;
+  text-align: right;
+}

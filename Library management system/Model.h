@@ -200,3 +200,32 @@ public:
     bool isAvailable() const { return copyStatus == "Available"; }
     bool isReserved()  const { return copyStatus == "Reserved"; }
 };
+
+class Loan {
+public:
+    string loanId;
+    string memberId;
+    string librarianId;
+    string copyId;
+    string issueDate;   // YYYY-MM-DD
+    string dueDate;     // YYYY-MM-DD
+    string returnDate;  // YYYY-MM-DD hoac "NONE"
+    int renewalCount;
+    string status;
+
+    bool isOverdue(const string& currentDate = DateUtils::today()) const {
+        return (status != "Returned" && DateUtils::diffDays(dueDate, currentDate) > 0);
+    }
+    int calculateOverdueDays(const string& checkDate) const {
+        int diff = DateUtils::diffDays(dueDate, checkDate);
+        return (diff > 0) ? diff : 0;
+    }
+    bool renewLoan(int extraDays) {
+        if (renewalCount < 2 && status == "Active") {
+            dueDate = DateUtils::addDays(dueDate, extraDays);
+            renewalCount++;
+            return true;
+        }
+        return false;
+    }
+};

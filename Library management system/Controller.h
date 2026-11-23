@@ -279,3 +279,124 @@ public:
         }
         if (changed) db.saveAll();
     }
+    string issueLoan(const string& memberId, const string& copyId, const string& librarianId, const string& issueDateInput = "") {
+        syncReservations();
+
+        Member* mem = nullptr;
+        for (auto& m : db.members) if (m.getUserId() == memberId) mem = &m;
+        if (!mem) return "[UC: Borrow Book] Loi: Khong tim thay Member ID " + memberId;
+
+        if (!mem->canBorrow()) {
+            return "[Include: Validate Quota] Tu choi! Doc gia vuot han muc (" + to_string(mem->activeLoansCount) +
+                   "/" + to_string(mem->maxQuota) + ") hoac dang no phat (" + to_string((int)mem->totalUnpaidFines) + " d).";
+        }
+
+        string issueDate = DateUtils::isValidDate(issueDateInput) ? issueDateInput : DateUtils::today();
+        string dueDate   = DateUtils::addDays(issueDate, db.defaultLoanDays);
+
+        for (auto& c : db.bookCopies) {
+            if (c.copyId == copyId) {
+                if (c.isReserved()) {
+                    bool reservedForMe = false;
+                    for (const auto& r : db.reservations) {
+                        if (r.status == "Ready" && r.copyId == c.copyId && r.memberId == memberId) {
+                            reservedForMe = true;
+                            break;
+                        }
+                    }
+                    if (!reservedForMe) {
+                        return "[UC: Borrow Book] Ban sao " + copyId + " dang duoc giu (Reserved) cho doc gia khac!";
+                    }
+                } else if (!c.isAvailable()) {
+                    return "[UC: Borrow Book] Ban sao " + copyId + " dang ban (" + c.copyStatus + ").";
+                }
+
+                c.markBorrowed();
+                mem->activeLoansCount++;
+
+                // Tu dong hoan tat phieu dat cho (neu Member dang dat cuon sach nay)
+                string holdSyncMsg = "";
+                for (auto& r : db.reservations) {
+                    if (r.memberId == memberId && r.bookId == c.bookId &&
+                        (r.status == "Ready" || r.status == "Pending") &&
+                        (r.copyId == c.copyId || r.copyId == "NONE")) {
+                        r.copyId = c.copyId;
+                        r.fulfillHold();
+                        holdSyncMsg = " | Da dong bo phieu dat cho " + r.reservationId + " -> Fulfilled";
+                        break;
+                    }
+                }
+
+                int nextLoanNum = (int)db.loans.size() + 1;
+                string loanId = (nextLoanNum < 10 ? "L0" : "L") + to_string(nextLoanNum);
+                db.loans.push_back({loanId, memberId, librarianId, copyId, issueDate, dueDate, "NONE", 0, "Active"});
+                db.saveAll();
+
+                return "[UC: Borrow Book] Thanh cong! Ma phieu: " + loanId + " | Ngay muon: " + issueDate +
+                       " | Han tra: " + dueDate + holdSyncMsg;
+            }
+        }
+        return "[UC: Borrow Book] Khong tim thay ban sao CopyID: " + copyId;
+    }
+
+    string processReturn(const string& loanId, const string& returnDateInput = "") {
+        syncReservations();
+        string returnDate = DateUtils::isValidDate(returnDateInput) ? returnDateInput : DateUtils::today();
+
+        for (auto& l : db.loans) {
+            if (l.loanId == loanId && l.status != "Returned") {
+                l.returnDate = returnDate;
+                l.status = "Returned";
+
+                string holdNotice = "";
+                for (auto& c : db.bookCopies) {
+                    if (c.copyId == l.copyId) {
+                        string assignedInfo;
+                        if (assignCopyToNextPending(c.bookId, c.copyId, returnDate, assignedInfo)) {
+                            holdNotice = " | [GIU TAI QUAY] Chuyen ban sao " + c.copyId + " sang Reserved cho phieu " + assignedInfo;
+                        } else {
+                            c.markReturned();
+                        }
+                        break;
+                    }
+                }
+
+                Member* mem = nullptr;
+                for (auto& m : db.members) if (m.getUserId() == l.memberId) { m.activeLoansCount--; mem = &m; }
+
+                int overdueDays = l.calculateOverdueDays(returnDate);
+                if (overdueDays > 0) {
+                    int nextFineNum = (int)db.fines.size() + 1;
+                    string fineId = (nextFineNum < 10 ? "F0" : "F") + to_string(nextFineNum);
+                    Fine f{fineId, overdueDays, 0.0, "Unpaid", "NONE", l.loanId};
+                    f.computeFee(db.fineRatePerDay);
+                    db.fines.push_back(f);
+                    if (mem) mem->totalUnpaidFines += f.amount;
+                    db.saveAll();
+                    return "[Extend: Calculate Fine] Tra ngay " + returnDate + " (tre " + to_string(overdueDays) +
+                           " ngay)! Phat sinh phieu phat " + fineId + ": " + to_string((int)f.amount) + " VND." + holdNotice;
+                }
+
+                db.saveAll();
+                return "[UC: Return Book] Tra sach dung han thanh cong ngay " + returnDate + " cho phieu " + loanId + holdNotice;
+            }
+        }
+        return "[UC: Return Book] Khong tim thay phieu muon dang mo: " + loanId;
+    }
+
+    string collectFine(const string& fineId) {
+        for (auto& f : db.fines) {
+            if (f.fineId == fineId && f.paidStatus == "Unpaid") {
+                f.recordPayment(DateUtils::today());
+                for (const auto& l : db.loans) {
+                    if (l.loanId == f.loanId) {
+                        for (auto& m : db.members) if (m.getUserId() == l.memberId) m.totalUnpaidFines -= f.amount;
+                    }
+                }
+                db.saveAll();
+                return "[UC: Collect Fine] Da thu tien phat & xoa no cho phieu: " + fineId + " (Ngay: " + f.paymentDate + ")";
+            }
+        }
+        return "[UC: Collect Fine] Khong tim thay phieu phat chua thanh toan: " + fineId;
+    }
+

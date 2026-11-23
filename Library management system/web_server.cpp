@@ -34,3 +34,187 @@ User* findUserById(const string& userId) {
     for (auto& m : g_db.members)    if (m.getUserId() == userId) return &m;
     return nullptr;
 }
+User* getActor(const httplib::Request& req) {
+    string uid = req.get_header_value("X-User-Id");
+    if (uid.empty() && req.has_param("actorId")) {
+        uid = req.get_param_value("actorId");
+    }
+    return findUserById(uid);
+}
+
+void sendForbidden(httplib::Response& res, const string& msg) {
+    res.status = 403;
+    res.set_content("{\"ok\":false,\"message\":\"" + jsonEscape(msg) + "\"}", "application/json; charset=utf-8");
+}
+
+string buildStateJson(User* actor) {
+    string role = actor ? actor->getRole() : "Guest";
+    string actorId = actor ? actor->getUserId() : "";
+    bool isMember = (role == "Member");
+    bool isStaff = (role == "Librarian" || role == "Administrator");
+
+    ostringstream os;
+    os << "{";
+
+    os << "\"serverDate\":\"" << jsonEscape(DateUtils::today()) << "\",";
+    os << "\"serverDateTime\":\"" << jsonEscape(DateUtils::nowDateTime()) << "\",";
+
+    os << "\"policy\":{"
+       << "\"defaultLoanDays\":" << g_db.defaultLoanDays << ","
+       << "\"fineRatePerDay\":" << (long long)g_db.fineRatePerDay
+       << "},";
+
+    os << "\"books\":[";
+    for (size_t i = 0; i < g_db.books.size(); ++i) {
+        const auto& b = g_db.books[i];
+        if (i) os << ",";
+        os << "{"
+           << "\"bookId\":\"" << jsonEscape(b.bookId) << "\","
+           << "\"isbn\":\"" << jsonEscape(b.isbn) << "\","
+           << "\"title\":\"" << jsonEscape(b.title) << "\","
+           << "\"author\":\"" << jsonEscape(b.author) << "\","
+           << "\"publisher\":\"" << jsonEscape(b.publisher) << "\","
+           << "\"pubYear\":" << b.pubYear << ","
+           << "\"categoryId\":\"" << jsonEscape(b.categoryId) << "\""
+           << "}";
+    }
+    os << "],";
+
+    os << "\"bookCopies\":[";
+    for (size_t i = 0; i < g_db.bookCopies.size(); ++i) {
+        const auto& c = g_db.bookCopies[i];
+        if (i) os << ",";
+        os << "{"
+           << "\"copyId\":\"" << jsonEscape(c.copyId) << "\","
+           << "\"barcode\":\"" << jsonEscape(c.barcode) << "\","
+           << "\"rackLocation\":\"" << jsonEscape(c.rackLocation) << "\","
+           << "\"copyStatus\":\"" << jsonEscape(c.copyStatus) << "\","
+           << "\"bookId\":\"" << jsonEscape(c.bookId) << "\""
+           << "}";
+    }
+    os << "],";
+
+    os << "\"loans\":[";
+    bool first = true;
+    for (const auto& l : g_db.loans) {
+        if (isMember && l.memberId != actorId) continue;
+        if (!first) os << ",";
+        first = false;
+        os << "{"
+           << "\"loanId\":\"" << jsonEscape(l.loanId) << "\","
+           << "\"memberId\":\"" << jsonEscape(l.memberId) << "\","
+           << "\"librarianId\":\"" << jsonEscape(l.librarianId) << "\","
+           << "\"copyId\":\"" << jsonEscape(l.copyId) << "\","
+           << "\"issueDate\":\"" << jsonEscape(l.issueDate) << "\","
+           << "\"dueDate\":\"" << jsonEscape(l.dueDate) << "\","
+           << "\"returnDate\":\"" << jsonEscape(l.returnDate) << "\","
+           << "\"renewalCount\":" << l.renewalCount << ","
+           << "\"status\":\"" << jsonEscape(l.status) << "\""
+           << "}";
+    }
+    os << "],";
+
+    os << "\"fines\":[";
+    first = true;
+    for (const auto& f : g_db.fines) {
+        if (isMember) {
+            bool mine = false;
+            for (const auto& l : g_db.loans) {
+                if (l.loanId == f.loanId && l.memberId == actorId) { mine = true; break; }
+            }
+            if (!mine) continue;
+        }
+        if (!first) os << ",";
+        first = false;
+        os << "{"
+           << "\"fineId\":\"" << jsonEscape(f.fineId) << "\","
+           << "\"daysOverdue\":" << f.daysOverdue << ","
+           << "\"amount\":" << (long long)f.amount << ","
+           << "\"paidStatus\":\"" << jsonEscape(f.paidStatus) << "\","
+           << "\"paymentDate\":\"" << jsonEscape(f.paymentDate) << "\","
+           << "\"loanId\":\"" << jsonEscape(f.loanId) << "\""
+           << "}";
+    }
+    os << "],";
+
+    os << "\"reservations\":[";
+    first = true;
+    for (const auto& r : g_db.reservations) {
+        if (isMember && r.memberId != actorId) continue;
+        if (!first) os << ",";
+        first = false;
+        os << "{"
+           << "\"reservationId\":\"" << jsonEscape(r.reservationId) << "\","
+           << "\"requestDate\":\"" << jsonEscape(r.requestDate) << "\","
+           << "\"expiryDate\":\"" << jsonEscape(r.expiryDate) << "\","
+           << "\"status\":\"" << jsonEscape(r.status) << "\","
+           << "\"memberId\":\"" << jsonEscape(r.memberId) << "\","
+           << "\"bookId\":\"" << jsonEscape(r.bookId) << "\","
+           << "\"copyId\":\"" << jsonEscape(r.copyId) << "\""
+           << "}";
+    }
+    os << "],";
+
+    os << "\"admins\":[";
+    if (isStaff) {
+        for (size_t i = 0; i < g_db.admins.size(); ++i) {
+            const auto& a = g_db.admins[i];
+            if (i) os << ",";
+            os << "{"
+               << "\"userId\":\"" << jsonEscape(a.getUserId()) << "\","
+               << "\"fullName\":\"" << jsonEscape(a.getFullName()) << "\","
+               << "\"email\":\"" << jsonEscape(a.getEmail()) << "\","
+               << "\"role\":\"" << jsonEscape(a.getRole()) << "\""
+               << "}";
+        }
+    }
+    os << "],";
+
+    os << "\"librarians\":[";
+    if (isStaff) {
+        for (size_t i = 0; i < g_db.librarians.size(); ++i) {
+            const auto& l = g_db.librarians[i];
+            if (i) os << ",";
+            os << "{"
+               << "\"userId\":\"" << jsonEscape(l.getUserId()) << "\","
+               << "\"fullName\":\"" << jsonEscape(l.getFullName()) << "\","
+               << "\"email\":\"" << jsonEscape(l.getEmail()) << "\","
+               << "\"role\":\"" << jsonEscape(l.getRole()) << "\","
+               << "\"staffCode\":\"" << jsonEscape(l.staffCode) << "\","
+               << "\"deskShift\":\"" << jsonEscape(l.deskShift) << "\""
+               << "}";
+        }
+    }
+    os << "],";
+
+    os << "\"members\":[";
+    first = true;
+    for (const auto& m : g_db.members) {
+        if (isMember && m.getUserId() != actorId) continue;
+        if (!first) os << ",";
+        first = false;
+        os << "{"
+           << "\"userId\":\"" << jsonEscape(m.getUserId()) << "\","
+           << "\"fullName\":\"" << jsonEscape(m.getFullName()) << "\","
+           << "\"email\":\"" << jsonEscape(m.getEmail()) << "\","
+           << "\"role\":\"" << jsonEscape(m.getRole()) << "\","
+           << "\"membershipCardNo\":\"" << jsonEscape(m.membershipCardNo) << "\","
+           << "\"maxQuota\":" << m.maxQuota << ","
+           << "\"activeLoansCount\":" << m.activeLoansCount << ","
+           << "\"totalUnpaidFines\":" << (long long)m.totalUnpaidFines
+           << "}";
+    }
+    os << "],";
+
+    os << "\"auditReport\":\"" << (isStaff ? jsonEscape(g_ctrl.exportAuditReport()) : "") << "\"";
+    os << "}";
+    return os.str();
+}
+
+int safeInt(const string& s, int fallback) {
+    try { return s.empty() ? fallback : stoi(s); } catch (...) { return fallback; }
+}
+
+double safeDouble(const string& s, double fallback) {
+    try { return s.empty() ? fallback : stod(s); } catch (...) { return fallback; }
+}

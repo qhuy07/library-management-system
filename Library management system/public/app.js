@@ -490,3 +490,127 @@ $('btn-save-policy').addEventListener('click', async () => {
   showToast(data.message, !data.ok);
   await loadState();
 });
+
+// PROFILE (XEM & SUA THONG TIN NGUOI DUNG)
+async function loadProfile(fillInputs = true) {
+  if (!currentUser) return;
+  try {
+    const res = await fetch('/api/profile', {
+      headers: { 'X-User-Id': currentUser.userId }
+    });
+    const data = await res.json();
+    if (!data.ok || !data.user) {
+      showToast(data.message || 'Khong the tai thong tin ca nhan!', true);
+      return;
+    }
+    const u = data.user;
+    const rows = [
+      ['Ma tai khoan (User ID)', `<strong>${escapeHtml(u.userId)}</strong>`],
+      ['Ho va ten', escapeHtml(u.fullName)],
+      ['Email', escapeHtml(u.email)],
+      ['Vai tro (Role)', statusBadge(u.role)],
+      ['Trang thai', statusBadge(u.status || 'Active')]
+    ];
+    if (u.role === 'Member') {
+      rows.push(['So the thanh vien', escapeHtml(u.membershipCardNo || '-')]);
+      rows.push(['Dang muon / Han muc', `${u.activeLoansCount ?? 0} / ${u.maxQuota ?? 3}`]);
+      rows.push(['Tong no phat', `${Number(u.totalUnpaidFines || 0).toLocaleString('vi-VN')} VND`]);
+    } else if (u.role === 'Librarian') {
+      rows.push(['Ma nhan vien', escapeHtml(u.staffCode || '-')]);
+      rows.push(['Ca truc', escapeHtml(u.deskShift || '-')]);
+    } else if (u.role === 'Administrator') {
+      rows.push(['Cap do Admin', escapeHtml(u.adminLevel ?? 1)]);
+      if (u.lastAuditDate) rows.push(['Ngay kiem toan gan nhat', escapeHtml(u.lastAuditDate)]);
+    }
+
+    $('profile-details').innerHTML = rows
+      .map(([k, v]) => `<div class="profile-info-row"><span class="profile-key">${k}</span><span class="profile-val">${v}</span></div>`)
+      .join('');
+
+    if (fillInputs) {
+      $('prof-name').value = u.fullName || '';
+      $('prof-email').value = u.email || '';
+      $('prof-pass').value = '';
+      $('prof-pass-confirm').value = '';
+    }
+  } catch (_) {
+    showToast('Loi ket noi khi tai thong tin tai khoan!', true);
+  }
+}
+
+$('sidebar-user-card')?.addEventListener('click', () => {
+  switchTab('profile');
+  loadProfile(true);
+});
+
+document.querySelector('.nav-btn[data-tab="profile"]')?.addEventListener('click', () => {
+  loadProfile(true);
+});
+
+$('btn-refresh-profile')?.addEventListener('click', () => {
+  loadProfile(true);
+});
+
+$('profile-form')?.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const fullName = $('prof-name').value.trim();
+  const email = $('prof-email').value.trim();
+  const password = $('prof-pass').value;
+  const confirm = $('prof-pass-confirm').value;
+
+  if (password && password !== confirm) {
+    showToast('Error: Confirm password not match!', true);
+    return;
+  }
+
+  const data = await apiPost('/api/profile/update', { fullName, email, password });
+  showToast(data.message || 'Da cap nhat thong tin.', !data.ok);
+  if (data.ok && data.user) {
+    currentUser = { ...currentUser, ...data.user };
+    sessionStorage.setItem('nf_user', JSON.stringify(currentUser));
+    $('user-name').textContent = `${currentUser.fullName} (${currentUser.userId})`;
+    await loadProfile(true);
+    await loadState(true);
+  }
+});
+
+window.fillAdminEditUser = function (userId, fullName, email) {
+  $('admin-edit-id').value = userId;
+  $('admin-edit-name').value = fullName;
+  $('admin-edit-email').value = email;
+  $('admin-edit-pass').value = '';
+  $('admin-edit-name').focus();
+};
+
+$('btn-admin-edit-user')?.addEventListener('click', async () => {
+  const targetUserId = $('admin-edit-id').value.trim();
+  if (!targetUserId) {
+    showToast('Vui long nhap User ID can chinh sua!', true);
+    return;
+  }
+  const data = await apiPost('/api/profile/update', {
+    targetUserId,
+    fullName: $('admin-edit-name').value.trim(),
+    email: $('admin-edit-email').value.trim(),
+    password: $('admin-edit-pass').value
+  });
+  showToast(data.message || 'Da cap nhat tai khoan.', !data.ok);
+  if (data.ok && data.user) {
+    if (data.user.userId === currentUser.userId) {
+      currentUser = { ...currentUser, ...data.user };
+      sessionStorage.setItem('nf_user', JSON.stringify(currentUser));
+      $('user-name').textContent = `${currentUser.fullName} (${currentUser.userId})`;
+    }
+    $('admin-edit-pass').value = '';
+    await loadState();
+  }
+});
+
+// Auto-restore session in same tab
+const saved = sessionStorage.getItem('nf_user');
+if (saved) {
+  try {
+    startApp(JSON.parse(saved));
+  } catch (_) {}
+}
+

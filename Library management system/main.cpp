@@ -423,3 +423,21 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
             SetWindowTextA(hLoginStatus, "Log out of the system.");
             ShowLoginScreen(hwnd);
         }
+        else if (id >= ID_TAB_OVERVIEW && id <= ID_TAB_REPORTS) {
+            SwitchTab(hwnd, id);
+        }
+        else if (id == ID_BTN_SEARCH) {
+            SetWindowTextA(hCatOutput, g_ctrl.searchBook(GetStr(hCatTitle)).c_str());
+        }
+        else if (id == ID_BTN_ADD_BOOK) {
+            string msg = g_ctrl.addBookAndCopy(GetStr(hCatBookId), GetStr(hCatTitle), GetStr(hCatAuthor), GetStr(hCatCopyId), GetStr(hCatBarcode));
+            SetWindowTextA(hCatOutput, (msg + "\r\n\r\n" + g_ctrl.searchBook("")).c_str());
+        }
+        else if (id == ID_BTN_UPD_BOOK) {
+            string msg = g_ctrl.updateBook(GetStr(hCatBookId), GetStr(hCatTitle), GetStr(hCatAuthor));
+            SetWindowTextA(hCatOutput, (msg + "\r\n\r\n" + g_ctrl.searchBook("")).c_str());
+        }
+        else if (id == ID_BTN_DEL_BOOK) {
+            string msg = g_ctrl.deleteBook(GetStr(hCatBookId));
+            SetWindowTextA(hCatOutput, (msg + "\r\n\r\n" + g_ctrl.searchBook("")).c_str());
+        }

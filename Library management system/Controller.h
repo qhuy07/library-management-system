@@ -236,3 +236,46 @@ public:
         }
         return "[UC: Delete Copy] Khong tim thay ban sao CopyID: " + copyId;
     }
+// Ham noi bo: tu dong chuyen ban sao cho nguoi Pending som nhat cua dau sach do (FIFO)
+    bool assignCopyToNextPending(const string& bookId, const string& copyId, const string& baseDate, string& assignedInfo) {
+        for (auto& r : db.reservations) {
+            if (r.bookId == bookId && r.status == "Pending") {
+                string newExpiry = DateUtils::addDays(baseDate, 3);
+                r.markReady(copyId, newExpiry);
+                for (auto& c : db.bookCopies) {
+                    if (c.copyId == copyId) { c.markReserved(); break; }
+                }
+                assignedInfo = r.reservationId + " (Member: " + r.memberId + ", Han giu: " + newExpiry + ")";
+                return true;
+            }
+        }
+        return false;
+    }
+
+    // Tu dong quet va dong bo cac phieu dat cho da qua han
+    void syncReservations() {
+        string todayStr = DateUtils::today();
+        bool changed = false;
+
+        for (auto& r : db.reservations) {
+            if ((r.status == "Pending" || r.status == "Ready") &&
+                DateUtils::diffDays(r.expiryDate, todayStr) > 0) {
+                string releasedCopy = r.copyId;
+                r.markExpired();
+                changed = true;
+
+                if (releasedCopy != "NONE") {
+                    string nextInfo;
+                    if (!assignCopyToNextPending(r.bookId, releasedCopy, todayStr, nextInfo)) {
+                        for (auto& c : db.bookCopies) {
+                            if (c.copyId == releasedCopy && c.isReserved()) {
+                                c.markReturned();
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        if (changed) db.saveAll();
+    }

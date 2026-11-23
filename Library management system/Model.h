@@ -409,10 +409,6 @@ public:
             fines.push_back(f);
         }
     }
-            getline(ss, c.copyId, ','); getline(ss, c.barcode, ','); getline(ss, c.rackLocation, ',');
-            getline(ss, c.copyStatus, ','); getline(ss, c.bookId, ',');
-            bookCopies.push_back(c);
-        }
 
     void saveAll() {
         ofstream fu("db_users.csv");

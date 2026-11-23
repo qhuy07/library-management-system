@@ -399,3 +399,14 @@ int main() {
         );
         res.set_content("{\"ok\":true,\"message\":\"" + jsonEscape(msg) + "\"}", "application/json; charset=utf-8");
     });
+// Nhan tra sach: chi Librarian & Administrator
+    svr.Post("/api/circulation/return", [](const httplib::Request& req, httplib::Response& res) {
+        lock_guard<mutex> lock(g_mtx);
+        User* actor = getActor(req);
+        if (!actor || (actor->getRole() != "Librarian" && actor->getRole() != "Administrator")) {
+            return sendForbidden(res, "Tu choi: Chi Thu thu hoac Admin moi co quyen nhan tra sach!");
+        }
+        string dateStr = req.has_param("date") ? req.get_param_value("date") : req.get_param_value("day");
+        string msg = g_ctrl.processReturn(req.get_param_value("loanId"), dateStr);
+        res.set_content("{\"ok\":true,\"message\":\"" + jsonEscape(msg) + "\"}", "application/json; charset=utf-8");
+    });

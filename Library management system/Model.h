@@ -297,3 +297,19 @@ public:
             Member("U04", "Nguy Thai Duong", "duong@ut.edu.vn", "123", "CARD-102", 3, 1, 0.0),
             Member("U05", "Van Cong Toan", "toan@ut.edu.vn", "123", "CARD-103", 3, 1, 70000.0)
         };
+        categories = {
+            {"CAT01", "Van hoc Viet Nam", "Zone A"},
+            {"CAT02", "Cong nghe Phan mem", "Zone B"}
+        };
+        books = {
+            {"B01", "978-604-1", "Vo nhat", "Kim Lan", "NXB Kim Dong", 2020, "CAT01"},
+            {"B02", "978-604-2", "De Men phieu luu ky", "To Hoai", "NXB Kim Dong", 2019, "CAT01"},
+            {"B03", "978-604-3", "Mat biec", "Nguyen Nhat Anh", "NXB Tre", 2021, "CAT01"},
+            {"B04", "978-604-4", "So do", "Vu Trong Phung", "NXB Van Hoc", 2018, "CAT01"}
+        };
+        bookCopies = {
+            {"C01", "NF-0121-03", "A1-01", "Available", "B01"},
+            {"C02", "NF-0042-02", "A1-02", "Borrowed",  "B02"},
+            {"C03", "NF-0075-01", "A1-03", "Available", "B03"},
+            {"C04", "NF-0088-01", "A1-04", "Borrowed",  "B04"}
+        };
